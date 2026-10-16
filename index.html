@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ระบบการลา สำนักงานสาธารณสุขอำเภอกู่แก้ว</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.tailwindcss.com/3.4.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.0/dist/sweetalert2.all.min.js"></script>
+<link rel="stylesheet" href="assets/style.css">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Sarabun', 'ui-sans-serif', 'system-ui'] },
+      colors: {
+        brand: {
+          50:'#FFF1F6', 100:'#FFE3EE', 200:'#FBCFE0', 300:'#F8B4CD',
+          400:'#F472A6', 500:'#EC4899', 600:'#DB2777', 700:'#BE185D',
+          800:'#9D174D', 900:'#831843'
+        },
+        teal2:'#26A69A', lime2:'#AED581', amber2:'#FFCA28', orange2:'#FF8A65',
+        red2:'#EF5350', purple2:'#4A2C6D', danger2:'#D32F2F', warn2:'#F57C00',
+        yellow2:'#FBC02D', blue2:'#0288D1', pink2:'#F9A8D4'
+      },
+      boxShadow: {
+        soft: '0 10px 30px -12px rgba(190,24,93,.25)',
+        card: '0 1px 2px rgba(16,24,40,.04), 0 8px 24px -12px rgba(16,24,40,.14)'
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-pink-50/60 text-slate-700 antialiased">
+
+<!-- ============ BOOT SCREEN (รอโหลดข้อมูลจาก Google Sheets) ============ -->
+<div id="bootScreen" class="login-bg fixed inset-0 z-[10000] flex flex-col items-center justify-center gap-4">
+  <span class="spinner"></span>
+  <p class="text-sm font-semibold text-brand-700">กำลังเตรียมระบบการลา...</p>
+  <p class="text-xs text-slate-400">กำลังโหลดข้อมูลจากฐานข้อมูล</p>
+</div>
+
+<!-- ============ LOADING OVERLAY ============ -->
+<div id="overlay" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white/70 backdrop-blur-sm">
+  <div class="flex flex-col items-center gap-3">
+    <span class="spinner"></span>
+    <span id="overlayText" class="text-sm font-medium text-brand-700">กำลังดำเนินการ...</span>
+  </div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<section id="loginView" class="hidden min-h-screen flex-col">
+  <div class="login-bg flex flex-1 items-center justify-center px-4 py-10">
+    <div class="w-full max-w-5xl">
+      <div class="grid overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-black/5 md:grid-cols-5">
+        <!-- left brand panel -->
+        <div class="relative flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-brand-600 to-brand-400 p-8 text-center text-white md:col-span-2">
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,#fff,transparent_45%)]"></div>
+          <div class="relative flex h-28 w-28 items-center justify-center rounded-full bg-white/95 p-3 shadow-lg">
+            <img id="loginLogo" alt="โลโก้กระทรวงสาธารณสุข" class="h-full w-full object-contain">
+          </div>
+          <div class="relative space-y-1">
+            <h1 class="text-2xl font-bold leading-tight">ระบบการลา</h1>
+            <p class="text-sm font-medium text-white/90">เจ้าหน้าที่ / บุคลากร</p>
+          </div>
+          <div class="relative mt-2 space-y-0.5 text-sm">
+            <p id="loginOffice" class="font-semibold"></p>
+            <p id="loginAffil" class="text-white/85"></p>
+          </div>
+        </div>
+        <!-- right form -->
+        <div class="p-7 sm:p-10 md:col-span-3">
+          <span class="badge badge-brand"><i class="fa-solid fa-shield-halved"></i> สำหรับผู้ดูแลระบบและเจ้าหน้าที่</span>
+          <h2 class="mt-4 text-xl font-bold text-slate-800">เข้าสู่ระบบ</h2>
+          <p class="mt-1 text-sm text-slate-500">กรอกชื่อผู้ใช้และรหัสผ่านของท่าน ระบบจะตรวจสอบสิทธิ์ให้อัตโนมัติ</p>
+          <form id="loginForm" class="mt-6 space-y-4" autocomplete="off">
+            <div>
+              <label class="lbl">ชื่อผู้ใช้ (Username)</label>
+              <div class="relative">
+                <i class="fa-regular fa-user ico-left"></i>
+                <input name="username" class="inp pl-10" placeholder="username" required>
+              </div>
+            </div>
+            <div>
+              <label class="lbl">รหัสผ่าน (Password)</label>
+              <div class="relative">
+                <i class="fa-solid fa-lock ico-left"></i>
+                <input name="password" type="password" class="inp pl-10 pr-10" placeholder="••••••••" required>
+                <button type="button" class="pw-toggle" data-pw><i class="fa-regular fa-eye"></i></button>
+              </div>
+            </div>
+            <button class="btn-primary w-full justify-center py-3 text-base">
+              <i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบ
+            </button>
+          </form>
+          <p class="mt-5 text-center text-xs text-slate-400">
+            หากลืมรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบ
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer id="loginFooter" class="py-5 text-center text-xs text-slate-500"></footer>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<section id="appView" class="hidden min-h-screen">
+  <!-- sidebar backdrop (mobile) -->
+  <div id="sbBackdrop" class="fixed inset-0 z-30 hidden bg-slate-900/40 backdrop-blur-sm lg:hidden"></div>
+
+  <!-- sidebar -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full bg-white shadow-xl ring-1 ring-black/5 transition-transform duration-300 lg:translate-x-0">
+    <div class="flex h-full flex-col">
+      <div class="flex items-center gap-3 border-b border-slate-100 px-5 py-4">
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 p-1.5 ring-1 ring-brand-100">
+          <img id="sbLogo" alt="โลโก้" class="h-full w-full object-contain">
+        </div>
+        <div class="min-w-0">
+          <p class="truncate text-sm font-bold text-brand-700">ระบบการลา</p>
+          <p id="sbOffice" class="truncate text-[11px] text-slate-500"></p>
+        </div>
+        <button id="sbClose" class="ml-auto grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 lg:hidden">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="px-4 py-4">
+        <div class="flex items-center gap-3 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 p-3 text-white shadow-soft">
+          <img id="sbAvatar" class="h-11 w-11 rounded-full border-2 border-white/70 object-cover" alt="โปรไฟล์">
+          <div class="min-w-0">
+            <p id="sbName" class="truncate text-sm font-semibold"></p>
+            <p id="sbRole" class="truncate text-[11px] text-white/85"></p>
+          </div>
+        </div>
+      </div>
+
+      <nav id="sbMenu" class="flex-1 space-y-1 overflow-y-auto px-3 pb-4"></nav>
+
+      <div class="border-t border-slate-100 p-3">
+        <button id="btnLogout" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-danger2 transition hover:bg-red-50">
+          <i class="fa-solid fa-power-off w-5 text-center"></i> ออกจากระบบ
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- main -->
+  <div class="flex min-h-screen flex-col lg:pl-72">
+    <header class="sticky top-0 z-20 border-b border-slate-200/70 bg-white/80 backdrop-blur">
+      <div class="flex items-center gap-3 px-4 py-3 sm:px-6">
+        <button id="sbOpen" class="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-700 ring-1 ring-brand-100 lg:hidden">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="min-w-0">
+          <h1 id="pageTitle" class="truncate text-base font-bold text-slate-800 sm:text-lg">แดชบอร์ด</h1>
+          <p id="pageSub" class="truncate text-[11px] text-slate-500 sm:text-xs"></p>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+          <span id="syncBadge" class="badge badge-ok hidden"></span>
+          <span id="hdFiscal" class="badge badge-brand hidden sm:inline-flex"></span>
+          <img id="hdAvatar" class="h-9 w-9 rounded-full object-cover ring-2 ring-brand-100" alt="โปรไฟล์">
+        </div>
+      </div>
+    </header>
+
+    <main id="pageBody" class="flex-1 px-4 py-5 sm:px-6 sm:py-6"></main>
+
+    <footer id="appFooter" class="border-t border-slate-200/70 bg-white px-4 py-4 text-center text-xs text-slate-500 sm:px-6"></footer>
+  </div>
+</section>
+
+<!-- ============ GENERIC MODAL ============ -->
+<div id="modal" class="fixed inset-0 z-[9998] hidden">
+  <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" data-modal-close></div>
+  <div class="relative flex min-h-full items-end justify-center p-0 sm:items-center sm:p-4">
+    <div id="modalCard" class="modal-card w-full max-w-2xl">
+      <div class="flex items-start gap-3 border-b border-slate-100 px-5 py-4">
+        <div id="modalIcon" class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600"><i class="fa-solid fa-pen"></i></div>
+        <div class="min-w-0 flex-1">
+          <h3 id="modalTitle" class="text-base font-bold text-slate-800">หัวข้อ</h3>
+          <p id="modalSub" class="text-xs text-slate-500"></p>
+        </div>
+        <button class="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-400 hover:bg-slate-100" data-modal-close>
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="modalBody" class="max-h-[70vh] overflow-y-auto px-5 py-4"></div>
+      <div id="modalFoot" class="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-3"></div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/db.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/print.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/admin.js"></script>
+<script src="assets/js/chief.js"></script>
+<script src="assets/js/staff.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
