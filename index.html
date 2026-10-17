@@ -10,7 +10,274 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <script src="https://cdn.tailwindcss.com/3.4.3"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.0/dist/sweetalert2.all.min.js"></script>
-<link rel="stylesheet" href="assets/style.css">
+<style>
+/* ---------- assets/style.css ---------- */
+/* ===== ระบบการลา สสอ.กู่แก้ว : base style (โทนชมพู) ===== */
+:root{
+  --brand:#BE185D;
+  --brand2:#EC4899;
+  --brand-dark:#9D174D;
+  --brand-50:#FFF1F6;
+  --brand-100:#FFE3EE;
+  --brand-200:#FBCFE0;
+}
+*{font-family:'Sarabun',ui-sans-serif,system-ui,sans-serif;}
+body{-webkit-tap-highlight-color:transparent;}
+
+/* scrollbar */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#fdf2f8}
+::-webkit-scrollbar-thumb{background:#f9a8d4;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#ec4899}
+
+/* login background */
+.login-bg{
+  background:
+    radial-gradient(1100px 520px at 12% -10%, rgba(236,72,153,.22), transparent 60%),
+    radial-gradient(900px 520px at 100% 0%, rgba(190,24,93,.18), transparent 55%),
+    linear-gradient(180deg,#fff7fa 0%,#fdeaf3 100%);
+}
+
+/* spinner */
+.spinner{
+  width:40px;height:40px;border-radius:50%;
+  border:4px solid rgba(190,24,93,.18);
+  border-top-color:var(--brand);
+  animation:spin .7s linear infinite;
+  display:inline-block;
+}
+.spinner-sm{width:16px;height:16px;border-width:2.5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* skeleton */
+.sk{position:relative;overflow:hidden;background:#f6e7ee;border-radius:10px}
+.sk::after{
+  content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);
+  animation:shimmer 1.25s infinite;
+}
+@keyframes shimmer{100%{transform:translateX(100%)}}
+
+/* form controls */
+.lbl{display:block;margin-bottom:.35rem;font-size:.8125rem;font-weight:600;color:#475569}
+.lbl .req{color:#D32F2F}
+.inp,.sel,.txa{
+  width:100%;border:1px solid #f2d9e4;background:#fff;border-radius:.75rem;
+  padding:.625rem .85rem;font-size:.9375rem;color:#334155;transition:.18s;
+}
+.inp:focus,.sel:focus,.txa:focus{
+  outline:none;border-color:var(--brand2);box-shadow:0 0 0 4px rgba(236,72,153,.16)
+}
+.inp:disabled,.inp[readonly],.txa[readonly]{background:#fdf5f8;color:#64748b;cursor:default}
+.txa{min-height:84px;resize:vertical}
+.ico-left{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:#d8a0ba;font-size:.9rem}
+.pw-toggle{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);
+  width:2rem;height:2rem;border-radius:.5rem;color:#d8a0ba}
+.pw-toggle:hover{background:#fdf2f8;color:var(--brand)}
+
+/* buttons */
+.btn,.btn-primary,.btn-ghost,.btn-soft,.btn-danger{
+  display:inline-flex;align-items:center;gap:.5rem;border-radius:.75rem;
+  padding:.55rem 1rem;font-size:.875rem;font-weight:600;transition:.18s;white-space:nowrap
+}
+.btn-primary{background:linear-gradient(135deg,#BE185D,#EC4899);color:#fff;box-shadow:0 8px 20px -10px rgba(190,24,93,.8)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;filter:none}
+.btn-soft{background:#FFF1F6;color:#9D174D;border:1px solid #FFE3EE}
+.btn-soft:hover{background:#FFE3EE}
+.btn-ghost{background:#fff;color:#475569;border:1px solid #f2d9e4}
+.btn-ghost:hover{background:#fdf2f8}
+.btn-danger{background:#D32F2F;color:#fff}
+.btn-danger:hover{filter:brightness(1.07)}
+
+/* icon action buttons */
+.ibtn{display:inline-grid;place-items:center;width:2.1rem;height:2.1rem;border-radius:.6rem;
+  font-size:.8125rem;transition:.18s;border:1px solid transparent}
+.ibtn-view{background:#E1F5FE;color:#0288D1;border-color:#B3E5FC}
+.ibtn-edit{background:#FFF8E1;color:#F57C00;border-color:#FFECB3}
+.ibtn-del{background:#FFEBEE;color:#D32F2F;border-color:#FFCDD2}
+.ibtn-print{background:#EDE7F6;color:#4A2C6D;border-color:#D1C4E9}
+.ibtn-ok{background:#FCE7F3;color:#BE185D;border-color:#FBCFE0}
+.ibtn-star{background:#FFFDE7;color:#F9A825;border-color:#FFF59D}
+.ibtn:hover{transform:translateY(-1px);filter:brightness(.98)}
+
+/* badge */
+.badge{display:inline-flex;align-items:center;gap:.35rem;border-radius:999px;
+  padding:.2rem .6rem;font-size:.75rem;font-weight:600;line-height:1.35}
+.badge-brand{background:#FFF1F6;color:#9D174D;border:1px solid #FFE3EE}
+.badge-gray{background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0}
+.badge-wait{background:#FFF8E1;color:#F57C00;border:1px solid #FFE0B2}
+.badge-ok{background:#E8F5E9;color:#2E7D32;border:1px solid #C8E6C9}
+.badge-no{background:#FFEBEE;color:#D32F2F;border:1px solid #FFCDD2}
+.badge-sick{background:#FFEBEE;color:#EF5350;border:1px solid #FFCDD2}
+.badge-personal{background:#E3F2FD;color:#0288D1;border:1px solid #BBDEFB}
+.badge-maternity{background:#FCE7F3;color:#9D174D;border:1px solid #FBCFE0}
+.badge-vacation{background:#E0F2F1;color:#00796B;border:1px solid #B2DFDB}
+
+/* cards */
+.card{background:#fff;border-radius:1rem;border:1px solid #fae3ed;
+  box-shadow:0 1px 2px rgba(190,24,93,.04),0 8px 24px -14px rgba(190,24,93,.18)}
+.card-pad{padding:1.1rem 1.15rem}
+
+/* sidebar menu */
+.mi{display:flex;align-items:center;gap:.75rem;border-radius:.8rem;padding:.65rem .8rem;
+  font-size:.9rem;font-weight:500;color:#475569;transition:.18s;width:100%;text-align:left}
+.mi:hover{background:#FFF1F6;color:#9D174D}
+.mi i{width:1.25rem;text-align:center;font-size:.95rem}
+.mi.active{background:linear-gradient(135deg,#BE185D,#EC4899);color:#fff;
+  box-shadow:0 8px 18px -10px rgba(190,24,93,.85)}
+.mi.active:hover{color:#fff}
+
+/* table */
+.tbl-wrap{width:100%;overflow-x:auto;border-radius:.9rem;border:1px solid #fae3ed;background:#fff}
+table.tbl{width:100%;border-collapse:collapse;font-size:.875rem;min-width:720px}
+table.tbl thead th{
+  background:linear-gradient(180deg,#DB2777,#9D174D);color:#fff;font-weight:600;
+  padding:.65rem .7rem;text-align:center;white-space:nowrap;border:1px solid rgba(255,255,255,.14)
+}
+table.tbl tbody td{padding:.6rem .7rem;border-bottom:1px solid #fae3ed;vertical-align:middle;color:#334155}
+table.tbl tbody tr:hover{background:#fff5f9}
+table.tbl tbody tr:last-child td{border-bottom:0}
+table.tbl tfoot td{background:#FFF1F6;font-weight:700;color:#9D174D;padding:.6rem .7rem;border-top:2px solid #FFE3EE}
+.td-c{text-align:center}
+.td-r{text-align:right}
+
+/* stat table (rowspan/colspan) */
+table.tbl-stat{min-width:860px}
+table.tbl-stat tbody td{border:1px solid #f6dfe9;text-align:center}
+table.tbl-stat tbody td:nth-child(2){text-align:left}
+
+/* modal */
+.modal-card{background:#fff;border-radius:1.25rem 1.25rem 0 0;box-shadow:0 30px 60px -20px rgba(131,24,67,.4);
+  animation:modalUp .22s ease-out}
+@media (min-width:640px){.modal-card{border-radius:1.25rem}}
+@keyframes modalUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* signature canvas */
+.sig-box{border:2px dashed #f2b9d0;border-radius:.9rem;background:#fff;overflow:hidden}
+.sig-box canvas{display:block;width:100%;height:170px;touch-action:none;cursor:crosshair}
+
+/* leave form sheet */
+.sheet{background:#fff;border-radius:1rem;border:1px solid #fae3ed;padding:1.25rem}
+.sheet-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .6rem}
+
+/* avatar upload */
+.up-prev{width:88px;height:88px;border-radius:1rem;object-fit:cover;background:#fdf2f8;border:1px solid #f2d9e4}
+.up-prev-wide{width:170px;height:88px;object-fit:contain;border-radius:.75rem;background:#fff7fa;border:1px solid #f2d9e4}
+
+/* swal tweaks */
+.swal2-popup{font-family:'Sarabun',sans-serif!important;border-radius:1.1rem!important}
+.swal2-title{font-size:1.15rem!important}
+.swal2-html-container{font-size:.95rem!important}
+
+/* ============================================================
+   ใบลา (พิมพ์) — A4 แนวตั้ง 21 x 29.7 ซม.
+   ขอบ : บน 2.2 / ล่าง 2.0 / ซ้าย 3.0 / ขวา 2.0 ซม. (มาตรฐานหนังสือราชการ)
+   ฟอนต์ : TH Sarabun New เนื้อหา 16pt หัวเรื่อง 18pt ตัวหนา
+   ============================================================ */
+:root{
+  --pp-top:2.2cm; --pp-bottom:2cm; --pp-left:3cm; --pp-right:2cm;
+  /* สูง 29.6 ซม. (A4 = 29.7) เผื่อ 1 มม. กันเศษปัดขึ้นแล้วดันไปหน้า 2 */
+  --pp-w:21cm; --pp-h:29.6cm;
+}
+
+/* กระดาษ 1 แผ่นเป๊ะ : ระยะขอบมาจาก padding ของกระดาษ (ไม่ใช่ @page)
+   จอกับหน้าพิมพ์จึงใช้ layout ชุดเดียวกัน วัดอย่างไรพิมพ์ออกมาอย่างนั้น */
+.print-paper{
+  box-sizing:border-box;
+  background:#fff;color:#000;margin:0 auto;
+  width:var(--pp-w);height:var(--pp-h);overflow:hidden;
+  padding:var(--pp-top) var(--pp-right) var(--pp-bottom) var(--pp-left);
+  font-size:16pt;line-height:1.45;
+}
+/* ชั้นในสำหรับย่อทั้งใบให้พอดีหน้า */
+.print-paper .pp-inner{transform-origin:top left;width:100%}
+/* กฎ * ด้านบนตั้งฟอนต์ทั้งเอกสาร จึงต้องระบุซ้ำให้ลูกทุกตัวของใบลา */
+.print-paper,.print-paper *{
+  font-family:'TH Sarabun New','TH SarabunPSK','Sarabun',ui-sans-serif,sans-serif;
+}
+/* ระดับย่อขนาดอัตโนมัติ เมื่อเนื้อหาเกิน 1 หน้า (ไม่ต่ำกว่า 14pt) */
+.print-paper.pp-fit1{font-size:15.5pt;line-height:1.4}
+.print-paper.pp-fit2{font-size:15pt;line-height:1.35}
+.print-paper.pp-fit3{font-size:14.5pt;line-height:1.3}
+.print-paper.pp-fit4{font-size:14pt;line-height:1.25}
+
+.print-paper .pp-head{text-align:center;line-height:1.3}
+.print-paper .pp-logo{height:2.2cm;object-fit:contain;display:block;margin:0 auto 2px}
+.print-paper .pp-title{font-size:18pt;font-weight:700;margin:2px 0;text-align:center}
+.print-paper .pp-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 6px}
+.print-paper .pp-ind{text-indent:2.5cm}
+/* ช่องเติมข้อมูล : มีข้อมูลแล้วแสดงเป็นข้อความธรรมดาต่อจากหัวข้อ ไม่มีเส้น
+   (ต้องไม่ยืดเต็มบรรทัด ไม่งั้นค่าที่เติมจะลอยห่างจากหัวข้อ) */
+.print-paper .pp-dot{flex:0 1 auto;min-width:0;padding:0 2px;text-align:left;white-space:nowrap}
+.print-paper .pp-dot.grow{flex:1 1 auto;white-space:normal;text-align:left}
+
+/* ช่องที่ยังไม่มีข้อมูล : ขีดเส้นจุดไข่ปลาไว้ให้เขียนด้วยปากกา */
+.print-paper .pp-blank{border-bottom:1px dotted #000}
+.print-paper .pp-dot.pp-blank{flex:1 1 4cm;min-width:4cm}
+.print-paper table.pp-tbl{width:100%;border-collapse:collapse;margin:4px 0;font-size:.92em;line-height:1.2}
+.print-paper table.pp-tbl th,.print-paper table.pp-tbl td{border:1px solid #000;padding:2px 5px;text-align:center}
+.print-paper .pp-sign{margin-top:6px;text-align:center;line-height:1.3}
+.print-paper .pp-sign img{height:1.5cm;object-fit:contain;display:block;margin:0 auto}
+.print-paper .pp-sign .pp-sline{width:62%;margin:0 auto 2px}
+.print-paper .pp-cols{display:flex;gap:.8cm;margin-top:8px;align-items:flex-start}
+.print-paper .pp-cols>div{flex:1;min-width:0}
+.print-paper .pp-box{border:1px solid #000;padding:6px 10px;margin-top:8px;line-height:1.35}
+.print-paper .cb{display:inline-block;width:.42em;height:.42em;border:1px solid #000;margin-right:4px;
+  position:relative;top:0;text-align:center;line-height:.4em;font-size:.9em}
+
+/* ---- แบบใบลาพักผ่อน ---- */
+.print-paper.pp-vac{line-height:1.5}
+.print-paper .pp-ul{text-decoration:underline;text-underline-offset:3px}
+.print-paper .pp-right{margin:4px 0 2px;text-align:right}
+.print-paper .pp-para{margin:2px 0;text-align:justify}
+.print-paper .pp-para .pp-dot{display:inline-block;flex:none;min-width:0}
+.print-paper .pp-para .pp-dot.grow{min-width:0}
+/* ในย่อหน้า ช่องว่างยืดเต็มบรรทัดไม่ได้ จึงกำหนดความกว้างคงที่ */
+.print-paper .pp-para .pp-dot.pp-blank{min-width:2.4cm}
+.print-paper .pp-para .pp-dot.grow.pp-blank{min-width:4cm}
+.print-paper .pp-ind2{display:inline-block;width:2.5cm}
+.print-paper .pp-sig-inline{height:1cm;object-fit:contain;vertical-align:bottom}
+.print-paper .pp-dotline{display:inline-block;width:58%;
+  margin-left:4px;vertical-align:bottom}
+.print-paper .pp-sline-blk{margin-top:4px;line-height:1.5}
+.print-paper .pp-sline-blk .pp-dot{min-width:0}
+
+/* บล็อกลงชื่อผู้ลาในใบลาพักผ่อน : ชิดขวา เว้นบนมากขึ้น
+   ทุกบรรทัดจัดกึ่งกลางบล็อกเดียวกัน ลายเซ็นจึงอยู่กลางชื่อพอดี */
+.print-paper .pp-sign-right{
+  width:50%;margin:1.1cm 0 0 auto;text-align:center;
+}
+.print-paper .pp-sign-right .pp-dotline{width:70%}
+/* กล่องข้อความ : ชิดซ้ายภายใน แต่ตัวกล่องอยู่กึ่งกลาง
+   ทำให้ "ลงชื่อ" ตรงกับ "(" ของบรรทัดชื่อพอดี */
+.print-paper .pp-sign-lines{display:inline-block;text-align:left}
+/* ลายเซ็นอยู่ในแถวเดียวกับคำว่า "ลงชื่อ"
+   (ต้องทับกฎ .pp-sign img ที่เป็น display:block) */
+.print-paper .pp-signrow{white-space:nowrap}
+.print-paper .pp-sign .pp-sig-inline{
+  display:inline-block;height:1.2cm;margin:0 0 0 .3cm;vertical-align:middle;
+}
+
+/* บล็อกผู้ตรวจสอบ ใต้ตารางสถิติการลา */
+.print-paper .pp-checker{margin-top:8px;width:62%;line-height:1.5}
+.print-paper .pp-checker .pp-dot{min-width:0}
+
+/* กันเนื้อหาถูกตัดคร่อมหน้า */
+.print-paper table.pp-tbl,.print-paper .pp-sign,
+.print-paper .pp-sline-blk,.print-paper .pp-checker,
+.print-paper .pp-cols>div{break-inside:avoid;page-break-inside:avoid}
+
+/* ขอบกระดาษจัดการด้วย padding ของ .print-paper แล้ว @page จึงเป็น 0
+   ป้องกันขอบซ้อนกันจนเนื้อหาล้นไปหน้า 2 */
+@page{size:A4 portrait;margin:0}
+@media print{
+  html,body{background:#fff;margin:0;padding:0;width:21cm}
+  .no-print{display:none!important}
+  .print-paper{margin:0;box-shadow:none;page-break-after:avoid;break-after:avoid}
+}
+
+</style>
 <script>
 tailwind.config = {
   theme: {
@@ -194,13 +461,2963 @@ tailwind.config = {
   </div>
 </div>
 
-<script src="assets/js/db.js"></script>
-<script src="assets/js/ui.js"></script>
-<script src="assets/js/print.js"></script>
-<script src="assets/js/auth.js"></script>
-<script src="assets/js/admin.js"></script>
-<script src="assets/js/chief.js"></script>
-<script src="assets/js/staff.js"></script>
-<script src="assets/js/app.js"></script>
+<script>
+/* ---------- assets/js/db.js ---------- */
+/* ============================================================
+   db.js — ชั้นข้อมูล
+   ระบบการลา สำนักงานสาธารณสุขอำเภอกู่แก้ว จังหวัดอุดรธานี
+
+   ทำงานได้ 2 โหมดโดยอัตโนมัติ :
+   - บน Google Apps Script : ข้อมูลจริงอยู่ใน Google Sheets
+     (โหลดครั้งเดียวตอนเปิดแอป แล้วบันทึกกลับทุกครั้งที่มีการแก้ไข)
+   - เปิดไฟล์ตรง ๆ ในเครื่อง : ใช้ localStorage เหมือนเดิม
+
+   ส่วนอื่นของระบบเรียก DB.* แบบ synchronous ได้เหมือนเดิมทุกประการ
+   เพราะข้อมูลทั้งก้อนถูกเก็บไว้ในหน่วยความจำ (_d)
+   ============================================================ */
+var DB = (function () {
+  var KEY = 'kukaew_leave_db_v1';
+  var SKEY = 'kukaew_leave_session';
+  var _d = null;
+  var _booting = false;      /* ระหว่างโหลด/ย้ายข้อมูล ยังไม่ต้องส่งขึ้นเซิร์ฟเวอร์ */
+
+  /* ------------------------------------------------------------
+     เชื่อมต่อ Google Sheets ผ่าน Apps Script Web App
+     ใช้เมื่อเปิดหน้าเว็บนี้นอก Apps Script (เปิดไฟล์ในเครื่องหรือโฮสต์ที่อื่น)
+     ตั้งเป็น '' ถ้าต้องการให้เก็บข้อมูลในเครื่องอย่างเดียว
+     ------------------------------------------------------------ */
+  var API_URL = 'https://script.google.com/macros/s/AKfycbw9NzWfA1USHsGpT6WeOd7UPKLamvBrh4FbBrmk5vP79lw7G8bHfRtzuzR2Y1NE2UtCPw/exec';
+  /* ต้องตรงกับ CONFIG.API_TOKEN ใน Code.gs */
+  var API_TOKEN = 'kukaew-2570-change-me';
+
+  /* โลโก้เริ่มต้น (แทนที่ได้ที่เมนูตั้งค่าระบบ) */
+  var DEFAULT_LOGO =
+    'data:image/svg+xml;utf8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">' +
+    '<circle cx="60" cy="60" r="56" fill="#BE185D"/>' +
+    '<circle cx="60" cy="60" r="47" fill="#fff"/>' +
+    '<path d="M53 22h14v24h24v14H67v34H53V60H29V46h24z" fill="#BE185D"/>' +
+    '<text x="60" y="108" font-size="11" text-anchor="middle" fill="#BE185D" font-family="sans-serif">MOPH</text>' +
+    '</svg>');
+
+  var AVATAR =
+    'data:image/svg+xml;utf8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+    '<rect width="100" height="100" fill="#FFE3EE"/>' +
+    '<circle cx="50" cy="38" r="17" fill="#DB2777"/>' +
+    '<path d="M12 100c0-21 17-33 38-33s38 12 38 33z" fill="#DB2777"/></svg>');
+
+  var LEAVE_TYPES = [
+    { id: 'sick',      name: 'ลาป่วย',        badge: 'badge-sick' },
+    { id: 'personal',  name: 'ลากิจส่วนตัว',  badge: 'badge-personal' },
+    { id: 'maternity', name: 'ลาคลอดบุตร',    badge: 'badge-maternity' },
+    { id: 'vacation',  name: 'ลาพักผ่อน',      badge: 'badge-vacation' }
+  ];
+
+  /* ประเภทที่อยู่ในแบบใบลาป่วย/กิจ/คลอด (ลาพักผ่อนใช้แบบฟอร์มแยกต่างหาก) */
+  var FORM_TYPES = LEAVE_TYPES.filter(function (t) { return t.id !== 'vacation'; });
+
+  /* สิทธิลาพักผ่อนประจำปีเริ่มต้น (วันทำการ) */
+  var VACATION_QUOTA = 10;
+
+  var ROLES = [
+    { id: 'admin', name: 'ผู้ดูแลระบบ' },
+    { id: 'chief', name: 'สาธารณสุขอำเภอ' },
+    { id: 'staff', name: 'เจ้าหน้าที่' }
+  ];
+
+  function uid(p) {
+    return (p || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function seed() {
+    return {
+      settings: {
+        officeName: 'สำนักงานสาธารณสุขอำเภอกู่แก้ว',
+        province: 'จังหวัดอุดรธานี',
+        affiliation: 'สำนักงานสาธารณสุขอำเภอกู่แก้ว',
+        district: 'กู่แก้ว',
+        logo: DEFAULT_LOGO
+      },
+      users: [
+        { id: uid('u'), username: 'admin', password: 'admin123', fullname: 'ผู้ดูแลระบบ', role: 'admin',
+          position: 'นักวิชาการคอมพิวเตอร์', avatar: '', signature: '' },
+        { id: uid('u'), username: 'chief', password: 'chief123', fullname: 'นายสมชาย ใจดี', role: 'chief',
+          position: 'สาธารณสุขอำเภอกู่แก้ว', avatar: '', signature: '' },
+        { id: uid('u'), username: 'staff01', password: 'staff123', fullname: 'นางสาวมาลี รักษ์ดี', role: 'staff',
+          position: 'พยาบาลวิชาชีพชำนาญการ', avatar: '', signature: '',
+          vacationCarry: 5, vacationQuota: 10 }
+      ],
+      fiscalYears: [
+        { id: uid('fy'), name: '2570',
+          r1Start: '2026-10-01', r1End: '2027-03-31',
+          r2Start: '2027-04-01', r2End: '2027-09-30', current: true },
+        { id: uid('fy'), name: '2569',
+          r1Start: '2025-10-01', r1End: '2026-03-31',
+          r2Start: '2026-04-01', r2End: '2026-09-30', current: false }
+      ],
+      leaves: []
+    };
+  }
+
+  /* ---------- เซิร์ฟเวอร์ (Google Apps Script) ---------- */
+
+  /** รันอยู่ภายใน Apps Script (เสิร์ฟด้วย HtmlService) หรือไม่ */
+  function inGas() {
+    return typeof google !== 'undefined' && google.script && google.script.run;
+  }
+  /** เรียก Google Sheets ผ่าน URL ของ Web App ได้หรือไม่ */
+  function viaApi() { return !inGas() && !!API_URL; }
+
+  /** มีเซิร์ฟเวอร์ให้บันทึกหรือไม่ (ไม่ว่าจะทางไหน) */
+  function hasServer() { return inGas() || viaApi(); }
+
+  /* ---------- เรียก API แบบ JSONP (อ่าน) ----------
+     ใช้ JSONP เพราะเปิดไฟล์จากเครื่อง (file://) จะติด CORS ถ้าใช้ fetch */
+  function jsonp(params, cb) {
+    var name = '__gsCb' + Date.now() + Math.floor(Math.random() * 1000);
+    var s = document.createElement('script');
+    var done = false, timer;
+
+    function cleanup() {
+      clearTimeout(timer);
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (s.parentNode) s.parentNode.removeChild(s);
+    }
+    window[name] = function (res) { if (done) return; done = true; cleanup(); cb(null, res); };
+    s.onerror = function () {
+      if (done) return; done = true; cleanup();
+      cb(new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ'));
+    };
+    timer = setTimeout(function () {
+      if (done) return; done = true; cleanup();
+      cb(new Error('เซิร์ฟเวอร์ไม่ตอบสนองภายในเวลาที่กำหนด'));
+    }, 30000);
+
+    var qs = [];
+    Object.keys(params).forEach(function (k) {
+      qs.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+    });
+    qs.push('token=' + encodeURIComponent(API_TOKEN));
+    qs.push('callback=' + name);
+    s.src = API_URL + (API_URL.indexOf('?') === -1 ? '?' : '&') + qs.join('&');
+    document.head.appendChild(s);
+  }
+
+  /* ---------- เรียก API แบบ POST (เขียน) ----------
+     ใช้ Content-Type text/plain เพื่อให้เป็น simple request ไม่เกิด preflight */
+  function postApi(action, data, cb) {
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: action, token: API_TOKEN, data: data })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res && res.ok) cb(null, res);
+        else cb(new Error((res && res.error) || 'บันทึกไม่สำเร็จ'));
+      })
+      .catch(function (e) { cb(e); });
+  }
+
+  /* สถานะการซิงก์ : idle | saving | error  (ให้ UI เอาไปแสดงได้) */
+  var _sync = { state: 'idle', at: null, message: '' };
+  var _syncCb = null;
+  var _pending = false;      /* มีข้อมูลรอส่ง */
+  var _inflight = false;     /* กำลังส่งอยู่ */
+  var _timer = null;
+
+  function syncState() { return _sync; }
+  function onSync(cb) { _syncCb = cb; }
+  function setSync(state, message) {
+    _sync.state = state;
+    _sync.message = message || '';
+    if (state === 'idle') _sync.at = new Date();
+    if (_syncCb) { try { _syncCb(_sync); } catch (e) {} }
+  }
+
+  /** เติมฟิลด์ที่ขาดให้ครบ ไม่ว่าข้อมูลจะมาจากที่ใด */
+  function normalize(d) {
+    if (!d || typeof d !== 'object') d = {};
+    var s = seed();
+    if (!d.settings || !d.settings.officeName) d.settings = Object.assign({}, s.settings, d.settings || {});
+    if (!d.users || !d.users.length) d.users = s.users;
+    if (!d.fiscalYears || !d.fiscalYears.length) d.fiscalYears = s.fiscalYears;
+    if (!d.leaves) d.leaves = [];
+    return d;
+  }
+
+  /** เขียนลง localStorage (บน Apps Script ใช้เป็นสำเนาสำรองออฟไลน์) */
+  function cacheSave() {
+    try { localStorage.setItem(KEY, JSON.stringify(_d)); }
+    catch (e) {
+      if (!hasServer()) {
+        Swal.fire({ icon: 'error', title: 'บันทึกข้อมูลไม่สำเร็จ',
+          text: 'พื้นที่จัดเก็บข้อมูลของเบราว์เซอร์เต็ม กรุณาลดขนาดรูปภาพที่อัพโหลด' });
+      }
+    }
+  }
+
+  /** ส่งข้อมูลทั้งก้อนขึ้น Google Sheets (ส่งทีละครั้ง ถ้ามีคิวจะส่งต่อให้เอง) */
+  function push() {
+    if (!hasServer()) return;
+    if (_inflight) { _pending = true; return; }
+    _inflight = true; _pending = false;
+    setSync('saving');
+
+    function ok() {
+      _inflight = false;
+      if (_pending) { push(); return; }
+      setSync('idle');
+    }
+    function fail(err) {
+      _inflight = false;
+      var msg = (err && err.message) ? err.message : 'บันทึกขึ้นเซิร์ฟเวอร์ไม่สำเร็จ';
+      setSync('error', msg);
+      Swal.fire({
+        icon: 'error', title: 'บันทึกขึ้นเซิร์ฟเวอร์ไม่สำเร็จ',
+        text: msg + ' (ข้อมูลยังถูกเก็บไว้ในเครื่อง)',
+        confirmButtonColor: '#BE185D', confirmButtonText: 'ลองอีกครั้ง',
+        showCancelButton: true, cancelButtonText: 'ไว้ภายหลัง', cancelButtonColor: '#94a3b8'
+      }).then(function (r) { if (r.isConfirmed) push(); });
+    }
+
+    if (inGas()) {
+      google.script.run.withSuccessHandler(ok).withFailureHandler(fail).apiSave(_d);
+    } else {
+      postApi('save', _d, function (err) { if (err) fail(err); else ok(); });
+    }
+  }
+
+  /**
+   * โหลดข้อมูลตั้งต้นของระบบ แล้วค่อยเรียก cb()
+   * ต้องเรียกก่อนใช้งาน DB.* ตัวอื่น (app.js เรียกให้แล้วใน boot)
+   */
+  function bootstrap(cb) {
+    cb = cb || function () {};
+    _booting = true;
+
+    function finish(fromServer) {
+      _d = normalize(_d);
+      migrate();
+      _booting = false;
+      cacheSave();
+      setSync('idle');
+      cb(null, { source: fromServer ? 'sheets' : 'local' });
+    }
+
+    function useLocal() {
+      try {
+        var raw = localStorage.getItem(KEY);
+        _d = raw ? JSON.parse(raw) : seed();
+      } catch (e) { _d = seed(); }
+    }
+
+    /* ไม่มีเซิร์ฟเวอร์ : ใช้ localStorage อย่างเดียว */
+    if (!hasServer()) { useLocal(); finish(false); return; }
+
+    /* ต่อเซิร์ฟเวอร์ไม่ได้ : ใช้สำเนาในเครื่องไปก่อน ไม่ให้ระบบล่ม */
+    function fallback(err) {
+      useLocal();
+      _d = normalize(_d);
+      migrate();
+      _booting = false;
+      setSync('error', 'โหลดข้อมูลจากเซิร์ฟเวอร์ไม่สำเร็จ กำลังใช้สำเนาในเครื่อง');
+      cb(err, { source: 'local-fallback' });
+    }
+
+    if (inGas()) {
+      google.script.run
+        .withSuccessHandler(function (data) { _d = data; finish(true); })
+        .withFailureHandler(fallback)
+        .apiLoad();
+      return;
+    }
+
+    /* ดึงจาก Google Sheets ผ่าน Web App URL */
+    jsonp({ action: 'load' }, function (err, res) {
+      if (err) return fallback(err);
+      if (!res || !res.ok) return fallback(new Error((res && res.error) || 'โหลดข้อมูลไม่สำเร็จ'));
+      _d = res.data;
+      finish(true);
+    });
+  }
+
+  function load() {
+    if (_d) return _d;
+    /* กันกรณีมีโค้ดเรียก DB ก่อน bootstrap() เสร็จ */
+    try {
+      var raw = localStorage.getItem(KEY);
+      _d = normalize(raw ? JSON.parse(raw) : seed());
+    } catch (e) { _d = normalize(seed()); }
+    return _d;
+  }
+
+  /** ปรับข้อมูลที่บันทึกไว้แล้วในเบราว์เซอร์ให้ตรงกับค่าตั้งต้นใหม่ (ทำครั้งเดียว) */
+  function migrate() {
+    var OLD_AFFIL = 'สำนักงานสาธารณสุขจังหวัดอุดรธานี';
+    var NEW_AFFIL = 'สำนักงานสาธารณสุขอำเภอกู่แก้ว';
+    if (!_d.migrations) _d.migrations = {};
+
+    /* สังกัด : เปลี่ยนจากระดับจังหวัดเป็นระดับอำเภอ */
+    if (!_d.migrations.affil2) {
+      if (_d.settings.affiliation === OLD_AFFIL) _d.settings.affiliation = NEW_AFFIL;
+      _d.leaves.forEach(function (l) {
+        if (l.affiliation === OLD_AFFIL) l.affiliation = NEW_AFFIL;
+      });
+      _d.migrations.affil2 = true;
+    }
+    if (!_d.settings.district) _d.settings.district = 'กู่แก้ว';
+  }
+
+  /** บันทึกข้อมูล : เขียนสำเนาในเครื่องทันที แล้วส่งขึ้นเซิร์ฟเวอร์แบบหน่วงเล็กน้อย
+   *  (หน่วงไว้เพื่อรวมการแก้ไขหลายครั้งติดกันให้เป็นการส่งครั้งเดียว) */
+  function save() {
+    cacheSave();
+    if (_booting || !hasServer()) return;
+    if (_timer) clearTimeout(_timer);
+    _timer = setTimeout(function () { _timer = null; push(); }, 400);
+  }
+
+  /** เรียกคำสั่งฝั่งเซิร์ฟเวอร์ที่ไม่เกี่ยวกับการบันทึกข้อมูล
+   *  ใช้ตรวจสถานะหรือซ่อมสเปรดชีตเมื่อจำเป็น (เรียกจาก console ได้) */
+  function server(action, cb, arg) {
+    if (!hasServer()) { cb(new Error('ระบบนี้ยังไม่ได้เชื่อมต่อ Google Sheets')); return; }
+
+    if (inGas()) {
+      var runner = google.script.run
+        .withSuccessHandler(function (res) { cb(null, res); })
+        .withFailureHandler(function (e) { cb(e); });
+      if (action === 'setup')       runner.setup();
+      else if (action === 'status') runner.sheetStatus();
+      else if (action === 'files')  runner.filesStatus();
+      else if (action === 'link')   runner.linkSpreadsheet(arg);
+      else if (action === 'unlink') runner.unlinkSpreadsheet();
+      else                          runner.apiPing();
+      return;
+    }
+
+    var params = { action: action };
+    if (arg) params.sheet = arg;
+    jsonp(params, function (err, res) {
+      if (err) return cb(err);
+      if (!res || !res.ok) return cb(new Error((res && res.error) || 'เรียกคำสั่งไม่สำเร็จ'));
+      cb(null, res.result);
+    });
+  }
+
+  /** บังคับส่งขึ้นเซิร์ฟเวอร์เดี๋ยวนี้ (ใช้ก่อนออกจากระบบ) */
+  function flush() {
+    if (!hasServer()) return;
+    if (_timer) { clearTimeout(_timer); _timer = null; }
+    push();
+  }
+
+  /* ---------- settings ---------- */
+  function settings() { return load().settings; }
+  function saveSettings(s) {
+    var t = settings();
+    t.officeName = s.officeName; t.affiliation = s.affiliation;
+    if (s.logo) t.logo = s.logo;
+    save();
+  }
+
+  /* ---------- users ---------- */
+  function users() { return load().users; }
+  function userById(id) { return users().filter(function (u) { return u.id === id; })[0] || null; }
+  function usersByRole(r) { return users().filter(function (u) { return u.role === r; }); }
+  function chief() { return usersByRole('chief')[0] || null; }
+  function usernameTaken(name, exceptId) {
+    return users().some(function (u) {
+      return u.username.toLowerCase() === String(name).toLowerCase() && u.id !== exceptId;
+    });
+  }
+  function saveUser(u) {
+    var list = users();
+    if (u.id) {
+      for (var i = 0; i < list.length; i++) if (list[i].id === u.id) {
+        list[i] = Object.assign({}, list[i], u); break;
+      }
+    } else {
+      u.id = uid('u'); list.push(u);
+    }
+    save(); return u;
+  }
+  function deleteUser(id) {
+    var d = load();
+    d.users = d.users.filter(function (u) { return u.id !== id; });
+    d.leaves = d.leaves.filter(function (l) { return l.userId !== id; });
+    save();
+  }
+
+  /* ---------- fiscal years ---------- */
+  function fiscalYears() {
+    return load().fiscalYears.slice().sort(function (a, b) {
+      return String(b.name).localeCompare(String(a.name), 'th');
+    });
+  }
+  function fyById(id) { return load().fiscalYears.filter(function (f) { return f.id === id; })[0] || null; }
+  function currentFY() { return load().fiscalYears.filter(function (f) { return f.current; })[0] || fiscalYears()[0] || null; }
+  function saveFY(f) {
+    var list = load().fiscalYears;
+    if (f.id) {
+      for (var i = 0; i < list.length; i++) if (list[i].id === f.id) { list[i] = Object.assign({}, list[i], f); break; }
+    } else { f.id = uid('fy'); f.current = false; list.push(f); }
+    save(); return f;
+  }
+  function deleteFY(id) {
+    var d = load();
+    d.fiscalYears = d.fiscalYears.filter(function (f) { return f.id !== id; });
+    save();
+  }
+  function setCurrentFY(id) {
+    load().fiscalYears.forEach(function (f) { f.current = (f.id === id); });
+    save();
+  }
+  /** หารอบ (1/2) ของวันที่ ภายในปีงบประมาณที่กำหนด */
+  function roundOf(fy, dateStr) {
+    if (!fy || !dateStr) return null;
+    if (fy.r1Start && fy.r1End && dateStr >= fy.r1Start && dateStr <= fy.r1End) return 1;
+    if (fy.r2Start && fy.r2End && dateStr >= fy.r2Start && dateStr <= fy.r2End) return 2;
+    return null;
+  }
+  /** หาปีงบประมาณ+รอบจากวันที่ (ถ้าไม่พบใช้ปีปัจจุบัน) */
+  function resolvePeriod(dateStr) {
+    var all = load().fiscalYears;
+    for (var i = 0; i < all.length; i++) {
+      var r = roundOf(all[i], dateStr);
+      if (r) return { fyId: all[i].id, fyName: all[i].name, round: r };
+    }
+    var c = currentFY();
+    return c ? { fyId: c.id, fyName: c.name, round: roundOf(c, dateStr) || 1 } : { fyId: '', fyName: '-', round: 1 };
+  }
+
+  /* ---------- leaves ---------- */
+  function leaves() { return load().leaves; }
+  function leaveById(id) { return leaves().filter(function (l) { return l.id === id; })[0] || null; }
+  function leavesByUser(uid2) {
+    return leaves().filter(function (l) { return l.userId === uid2; });
+  }
+  function saveLeave(l) {
+    var list = load().leaves;
+    if (l.id) {
+      for (var i = 0; i < list.length; i++) if (list[i].id === l.id) { list[i] = Object.assign({}, list[i], l); break; }
+    } else {
+      l.id = uid('lv'); l.createdAt = new Date().toISOString(); list.push(l);
+    }
+    save(); return l;
+  }
+  function deleteLeave(id) {
+    var d = load();
+    d.leaves = d.leaves.filter(function (l) { return l.id !== id; });
+    save();
+  }
+  /** ใบลาล่าสุดของผู้ใช้ (ก่อนรายการที่กำลังแก้ไข) */
+  function lastLeaveOf(userId, exceptId, types) {
+    return leavesByUser(userId)
+      .filter(function (l) { return l.id !== exceptId; })
+      .filter(function (l) { return !types || types.indexOf(l.leaveType) !== -1; })
+      .sort(function (a, b) { return (b.startDate || '').localeCompare(a.startDate || ''); })[0] || null;
+  }
+  /** นับที่ไม่ถูกปฏิเสธ = ถือเป็นวันลาที่ใช้ไปแล้ว */
+  function countsAsUsed(l) { return l.status !== 'rejected'; }
+
+  /** สรุป {sick:{times,days},...} ของผู้ใช้ในปีงบประมาณ (ครบทุกประเภทใน LEAVE_TYPES) */
+  function summaryOf(userId, fyId, exceptId) {
+    var out = {};
+    LEAVE_TYPES.forEach(function (t) { out[t.id] = { times: 0, days: 0 }; });
+    leavesByUser(userId).forEach(function (l) {
+      if (fyId && l.fyId !== fyId) return;
+      if (exceptId && l.id === exceptId) return;
+      if (!countsAsUsed(l)) return;
+      if (!out[l.leaveType]) return;
+      out[l.leaveType].times += 1;
+      out[l.leaveType].days += Number(l.days || 0);
+    });
+    return out;
+  }
+
+  /** ข้อมูลสิทธิลาพักผ่อนของผู้ใช้ในปีงบประมาณ (ดึงอัตโนมัติลงแบบใบลาพักผ่อน)
+   *  carry   = วันลาพักผ่อนสะสมยกมา
+   *  quota   = สิทธิลาพักผ่อนประจำปี
+   *  used    = ลาพักผ่อนไปแล้วในปีงบประมาณนี้ (วันทำการ)
+   *  remain  = มีสิทธิลาพักผ่อนประจำปีนี้อีก = quota - used
+   *  total   = รวมเป็น = carry + remain
+   */
+  function vacationInfo(userId, fyId, exceptId) {
+    var u = userById(userId) || {};
+    var carry = Number(u.vacationCarry || 0);
+    var quota = (u.vacationQuota === '' || u.vacationQuota == null) ? VACATION_QUOTA : Number(u.vacationQuota);
+    var used = summaryOf(userId, fyId, exceptId).vacation.days;
+    var remain = Math.max(0, quota - used);
+    return { carry: carry, quota: quota, used: used, remain: remain, total: carry + remain };
+  }
+
+  /* ---------- session ---------- */
+  function setSession(userId) { try { localStorage.setItem(SKEY, userId); } catch (e) {} }
+  function clearSession() { try { localStorage.removeItem(SKEY); } catch (e) {} }
+  function sessionUser() {
+    var id = null;
+    try { id = localStorage.getItem(SKEY); } catch (e) {}
+    return id ? userById(id) : null;
+  }
+  function login(u, p) {
+    return users().filter(function (x) {
+      return x.username.toLowerCase() === String(u).trim().toLowerCase() && x.password === p;
+    })[0] || null;
+  }
+
+  function reset() { _d = seed(); save(); }
+
+  return {
+    DEFAULT_LOGO: DEFAULT_LOGO, AVATAR: AVATAR, LEAVE_TYPES: LEAVE_TYPES,
+    FORM_TYPES: FORM_TYPES, VACATION_QUOTA: VACATION_QUOTA, ROLES: ROLES,
+    vacationInfo: vacationInfo,
+    uid: uid, load: load, save: save, reset: reset,
+    bootstrap: bootstrap, flush: flush, hasServer: hasServer, server: server,
+    syncState: syncState, onSync: onSync,
+    settings: settings, saveSettings: saveSettings,
+    users: users, userById: userById, usersByRole: usersByRole, chief: chief,
+    usernameTaken: usernameTaken, saveUser: saveUser, deleteUser: deleteUser,
+    fiscalYears: fiscalYears, fyById: fyById, currentFY: currentFY, saveFY: saveFY,
+    deleteFY: deleteFY, setCurrentFY: setCurrentFY, roundOf: roundOf, resolvePeriod: resolvePeriod,
+    leaves: leaves, leaveById: leaveById, leavesByUser: leavesByUser, saveLeave: saveLeave,
+    deleteLeave: deleteLeave, lastLeaveOf: lastLeaveOf, summaryOf: summaryOf,
+    setSession: setSession, clearSession: clearSession, sessionUser: sessionUser, login: login
+  };
+})();
+
+</script>
+<script>
+/* ---------- assets/js/ui.js ---------- */
+/* ============================================================
+   ui.js — ยูทิลิตี้ UI : modal, spinner, skeleton, alert, อัพโหลดรูป, ลายเซ็น
+   ============================================================ */
+var UI = (function () {
+
+  var THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                     'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  var THAI_MONTHS_SHORT = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+  function $(s, root) { return (root || document).querySelector(s); }
+  function $$(s, root) { return Array.prototype.slice.call((root || document).querySelectorAll(s)); }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  /* ---------- วันที่ ---------- */
+  function thDate(iso, short) {
+    if (!iso) return '-';
+    var p = String(iso).split('-'); if (p.length < 3) return iso;
+    var d = parseInt(p[2], 10), m = parseInt(p[1], 10) - 1, y = parseInt(p[0], 10) + 543;
+    return d + ' ' + (short ? THAI_MONTHS_SHORT[m] : THAI_MONTHS[m]) + ' ' + y;
+  }
+  function thDateShort(iso) { return thDate(iso, true); }
+  function todayISO() {
+    var d = new Date(), m = d.getMonth() + 1, dd = d.getDate();
+    return d.getFullYear() + '-' + (m < 10 ? '0' + m : m) + '-' + (dd < 10 ? '0' + dd : dd);
+  }
+  function daysBetween(a, b) {
+    if (!a || !b) return 0;
+    var d1 = new Date(a + 'T00:00:00'), d2 = new Date(b + 'T00:00:00');
+    if (isNaN(d1) || isNaN(d2) || d2 < d1) return 0;
+    return Math.round((d2 - d1) / 86400000) + 1;
+  }
+  function rangeText(a, b) {
+    if (!a) return '-';
+    if (!b || a === b) return thDateShort(a);
+    return thDateShort(a) + ' - ' + thDateShort(b);
+  }
+
+  /* ---------- ป้าย/ชื่อ ---------- */
+  function roleName(r) {
+    var x = DB.ROLES.filter(function (o) { return o.id === r; })[0];
+    return x ? x.name : r;
+  }
+  function typeName(t) {
+    var x = DB.LEAVE_TYPES.filter(function (o) { return o.id === t; })[0];
+    return x ? x.name : t;
+  }
+  function typeBadge(t) {
+    var x = DB.LEAVE_TYPES.filter(function (o) { return o.id === t; })[0];
+    return '<span class="badge ' + (x ? x.badge : 'badge-gray') + '">' + esc(x ? x.name : t) + '</span>';
+  }
+  function statusBadge(s) {
+    if (s === 'approved') return '<span class="badge badge-ok"><i class="fa-solid fa-circle-check"></i> อนุญาต</span>';
+    if (s === 'rejected') return '<span class="badge badge-no"><i class="fa-solid fa-circle-xmark"></i> ไม่อนุญาต</span>';
+    return '<span class="badge badge-wait"><i class="fa-regular fa-clock"></i> รออนุญาต</span>';
+  }
+  function statusText(s) {
+    return s === 'approved' ? 'อนุญาต' : s === 'rejected' ? 'ไม่อนุญาต' : 'รออนุญาต';
+  }
+  function avatarOf(u) { return (u && u.avatar) ? u.avatar : DB.AVATAR; }
+
+  /* ---------- overlay / spinner ---------- */
+  var ovCount = 0;
+  function busy(text) {
+    ovCount++;
+    var ov = $('#overlay');
+    $('#overlayText').textContent = text || 'กำลังดำเนินการ...';
+    ov.classList.remove('hidden'); ov.classList.add('flex');
+  }
+  function idle() {
+    ovCount = Math.max(0, ovCount - 1);
+    if (ovCount === 0) {
+      var ov = $('#overlay');
+      ov.classList.add('hidden'); ov.classList.remove('flex');
+    }
+  }
+  /** จำลองการโหลดข้อมูล (lazy) */
+  function delay(ms) { return new Promise(function (r) { setTimeout(r, ms == null ? 450 : ms); }); }
+  function btnLoading(btn, on, label) {
+    if (!btn) return;
+    if (on) {
+      btn.dataset.html = btn.innerHTML; btn.disabled = true;
+      btn.innerHTML = '<span class="spinner spinner-sm"></span> ' + (label || 'กำลังบันทึก...');
+    } else {
+      btn.disabled = false;
+      if (btn.dataset.html) btn.innerHTML = btn.dataset.html;
+    }
+  }
+
+  /* ---------- skeleton ---------- */
+  function skTable(rows, cols) {
+    var h = '<div class="card card-pad space-y-3">';
+    h += '<div class="sk h-6 w-48"></div>';
+    for (var i = 0; i < (rows || 6); i++) {
+      h += '<div class="flex gap-3">';
+      for (var j = 0; j < (cols || 6); j++) h += '<div class="sk h-9 flex-1"></div>';
+      h += '</div>';
+    }
+    return h + '</div>';
+  }
+  function skCards(n) {
+    var h = '<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">';
+    for (var i = 0; i < (n || 4); i++)
+      h += '<div class="card card-pad space-y-3"><div class="sk h-10 w-10 rounded-xl"></div>' +
+           '<div class="sk h-7 w-24"></div><div class="sk h-4 w-32"></div></div>';
+    return h + '</div>';
+  }
+  function skForm() {
+    var h = '<div class="card card-pad space-y-4">';
+    for (var i = 0; i < 5; i++) h += '<div class="space-y-2"><div class="sk h-4 w-28"></div><div class="sk h-11 w-full"></div></div>';
+    return h + '</div>';
+  }
+
+  /* ---------- sweetalert ---------- */
+  var BRAND = '#BE185D';
+  function toast(msg, icon) {
+    Swal.fire({
+      toast: true, position: 'top-end', timer: 2600, timerProgressBar: true,
+      showConfirmButton: false, icon: icon || 'success', title: msg
+    });
+  }
+  function ok(title, text) {
+    return Swal.fire({ icon: 'success', title: title, text: text || '',
+      confirmButtonColor: BRAND, confirmButtonText: 'ตกลง' });
+  }
+  function err(title, text) {
+    return Swal.fire({ icon: 'error', title: title, text: text || '',
+      confirmButtonColor: '#D32F2F', confirmButtonText: 'ตกลง' });
+  }
+  function warn(title, text) {
+    return Swal.fire({ icon: 'warning', title: title, text: text || '',
+      confirmButtonColor: '#F57C00', confirmButtonText: 'ตกลง' });
+  }
+  function confirmDel(title, text) {
+    return Swal.fire({
+      icon: 'warning', title: title || 'ยืนยันการลบข้อมูล?',
+      text: text || 'ข้อมูลที่ลบแล้วไม่สามารถกู้คืนได้',
+      showCancelButton: true, confirmButtonText: '<i class="fa-solid fa-trash"></i> ลบข้อมูล',
+      cancelButtonText: 'ยกเลิก', confirmButtonColor: '#D32F2F', cancelButtonColor: '#94a3b8',
+      reverseButtons: true
+    }).then(function (r) { return r.isConfirmed; });
+  }
+  function confirmAsk(title, text, btn) {
+    return Swal.fire({
+      icon: 'question', title: title, html: text || '',
+      showCancelButton: true, confirmButtonText: btn || 'ยืนยัน', cancelButtonText: 'ยกเลิก',
+      confirmButtonColor: BRAND, cancelButtonColor: '#94a3b8', reverseButtons: true
+    }).then(function (r) { return r.isConfirmed; });
+  }
+
+  /* ---------- modal ---------- */
+  var onCloseCb = null;
+  function modal(opt) {
+    $('#modalTitle').textContent = opt.title || '';
+    $('#modalSub').textContent = opt.sub || '';
+    $('#modalIcon').innerHTML = '<i class="fa-solid ' + (opt.icon || 'fa-pen') + '"></i>';
+    $('#modalBody').innerHTML = opt.body || '';
+    $('#modalFoot').innerHTML = opt.foot || '';
+    $('#modalCard').className = 'modal-card w-full ' + (opt.size || 'max-w-2xl');
+    $('#modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    onCloseCb = opt.onClose || null;
+    if (opt.onOpen) opt.onOpen($('#modalBody'));
+  }
+  function closeModal() {
+    $('#modal').classList.add('hidden');
+    document.body.style.overflow = '';
+    $('#modalBody').innerHTML = '';
+    if (onCloseCb) { var c = onCloseCb; onCloseCb = null; c(); }
+  }
+
+  /* ---------- อัพโหลดรูป -> dataURL (ย่อขนาดอัตโนมัติ) ---------- */
+  function fileToDataURL(file, maxW, maxH) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return resolve('');
+      if (!/^image\//.test(file.type)) return reject(new Error('กรุณาเลือกไฟล์รูปภาพ'));
+      var fr = new FileReader();
+      fr.onerror = function () { reject(new Error('อ่านไฟล์ไม่สำเร็จ')); };
+      fr.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          var mw = maxW || 500, mh = maxH || 500;
+          var r = Math.min(1, mw / img.width, mh / img.height);
+          var w = Math.round(img.width * r), h = Math.round(img.height * r);
+          var c = document.createElement('canvas'); c.width = w; c.height = h;
+          var x = c.getContext('2d');
+          if (/png|webp/i.test(file.type)) { x.clearRect(0, 0, w, h); }
+          else { x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); }
+          x.drawImage(img, 0, 0, w, h);
+          resolve(c.toDataURL(/png|webp/i.test(file.type) ? 'image/png' : 'image/jpeg', 0.85));
+        };
+        img.onerror = function () { reject(new Error('ไฟล์รูปภาพไม่ถูกต้อง')); };
+        img.src = fr.result;
+      };
+      fr.readAsDataURL(file);
+    });
+  }
+  /** ผูก input[type=file] กับ <img> พรีวิว  (เก็บค่าไว้ที่ input.dataset.value) */
+  function bindUpload(input, preview, maxW, maxH) {
+    if (!input) return;
+    input.addEventListener('change', function () {
+      var f = input.files && input.files[0];
+      if (!f) return;
+      busy('กำลังประมวลผลรูปภาพ...');
+      fileToDataURL(f, maxW, maxH).then(function (d) {
+        input.dataset.value = d;
+        if (preview) { preview.src = d; preview.classList.remove('hidden'); }
+        idle();
+      }).catch(function (e) { idle(); err('อัพโหลดไม่สำเร็จ', e.message); input.value = ''; });
+    });
+  }
+
+  /* ---------- ลายเซ็น (canvas) ---------- */
+  function signaturePad(canvas) {
+    var ctx = canvas.getContext('2d'), drawing = false, dirty = false;
+    function fit() {
+      var r = canvas.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+      var data = dirty ? canvas.toDataURL() : null;
+      canvas.width = Math.max(1, Math.round(r.width * dpr));
+      canvas.height = Math.max(1, Math.round(r.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0f172a';
+      if (data) { var im = new Image(); im.onload = function () { ctx.drawImage(im, 0, 0, r.width, r.height); }; im.src = data; }
+    }
+    function pos(e) {
+      var r = canvas.getBoundingClientRect();
+      var t = e.touches ? e.touches[0] : e;
+      return { x: t.clientX - r.left, y: t.clientY - r.top };
+    }
+    function start(e) { e.preventDefault(); drawing = true; dirty = true; var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+    function move(e) { if (!drawing) return; e.preventDefault(); var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+    function end() { drawing = false; }
+    canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove', move, { passive: false });
+    canvas.addEventListener('touchend', end);
+    setTimeout(fit, 30);
+    window.addEventListener('resize', fit);
+    return {
+      clear: function () { ctx.clearRect(0, 0, canvas.width, canvas.height); dirty = false; },
+      isEmpty: function () { return !dirty; },
+      toDataURL: function () { return dirty ? canvas.toDataURL('image/png') : ''; },
+      refit: fit
+    };
+  }
+
+  /** บล็อกเลือกวิธีลงลายเซ็น : สแกน / เซ็นสด */
+  function signatureBlockHTML(id, scanSrc, label) {
+    var hasScan = !!scanSrc;
+    return '' +
+    '<div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">' +
+      '<p class="mb-3 text-sm font-semibold text-slate-700"><i class="fa-solid fa-signature text-brand-600"></i> ' + esc(label || 'ลงชื่อ') + ' <span class="req text-danger2">*</span></p>' +
+      '<div class="mb-3 flex flex-wrap gap-2">' +
+        '<label class="btn-ghost cursor-pointer" data-sigmode="' + id + '">' +
+          '<input type="radio" name="sigmode_' + id + '" value="scan" class="accent-brand-600" ' + (hasScan ? 'checked' : 'disabled') + '> ลายเซ็นสแกน' +
+        '</label>' +
+        '<label class="btn-ghost cursor-pointer" data-sigmode="' + id + '">' +
+          '<input type="radio" name="sigmode_' + id + '" value="draw" class="accent-brand-600" ' + (hasScan ? '' : 'checked') + '> ลายเซ็นสด (วาด)' +
+        '</label>' +
+      '</div>' +
+      (hasScan
+        ? '<div id="' + id + '_scan" class="rounded-xl border border-slate-200 bg-white p-3 text-center">' +
+            '<img src="' + scanSrc + '" alt="ลายเซ็นสแกน" class="mx-auto h-24 object-contain">' +
+          '</div>'
+        : '<div class="mb-3 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-warn2">' +
+          '<i class="fa-solid fa-triangle-exclamation"></i> ยังไม่มีรูปลายเซ็นสแกนในระบบ (อัพโหลดได้ที่เมนูแก้ไขข้อมูลส่วนตัว)</div>') +
+      '<div id="' + id + '_draw" class="' + (hasScan ? 'hidden' : '') + '">' +
+        '<div class="sig-box"><canvas id="' + id + '_canvas"></canvas></div>' +
+        '<div class="mt-2 flex items-center justify-between">' +
+          '<span class="text-xs text-slate-400">ใช้เมาส์หรือนิ้วเซ็นในกรอบ</span>' +
+          '<button type="button" id="' + id + '_clear" class="btn-ghost text-xs"><i class="fa-solid fa-eraser"></i> ล้างลายเซ็น</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /** เรียกหลัง modal เปิด : คืน object {get:()=>dataURL} */
+  function initSignatureBlock(id, scanSrc) {
+    var cv = document.getElementById(id + '_canvas');
+    var pad = cv ? signaturePad(cv) : null;
+    var clr = document.getElementById(id + '_clear');
+    if (clr && pad) clr.addEventListener('click', function () { pad.clear(); });
+    function mode() {
+      var r = document.querySelector('input[name="sigmode_' + id + '"]:checked');
+      return r ? r.value : 'draw';
+    }
+    $$('input[name="sigmode_' + id + '"]').forEach(function (r) {
+      r.addEventListener('change', function () {
+        var sc = document.getElementById(id + '_scan'), dw = document.getElementById(id + '_draw');
+        if (sc) sc.classList.toggle('hidden', mode() !== 'scan');
+        if (dw) dw.classList.toggle('hidden', mode() !== 'draw');
+        if (mode() === 'draw' && pad) setTimeout(pad.refit, 30);
+      });
+    });
+    return {
+      get: function () {
+        if (mode() === 'scan') return scanSrc || '';
+        return pad ? pad.toDataURL() : '';
+      },
+      mode: mode
+    };
+  }
+
+  /* ---------- อื่น ๆ ---------- */
+  function emptyRow(cols, text) {
+    return '<tr><td colspan="' + cols + '" class="py-10 text-center text-slate-400">' +
+      '<i class="fa-regular fa-folder-open mb-2 block text-3xl"></i>' + esc(text || 'ไม่พบข้อมูล') + '</td></tr>';
+  }
+  function pageHead(title, desc, actionsHTML) {
+    return '<div class="mb-5 flex flex-wrap items-end justify-between gap-3">' +
+      '<div><h2 class="text-lg font-bold text-slate-800 sm:text-xl">' + esc(title) + '</h2>' +
+      '<p class="mt-0.5 text-xs text-slate-500 sm:text-sm">' + esc(desc || '') + '</p></div>' +
+      '<div class="flex flex-wrap gap-2">' + (actionsHTML || '') + '</div></div>';
+  }
+  function stat(icon, color, label, value, unit) {
+    return '<div class="card card-pad">' +
+      '<div class="flex items-start justify-between">' +
+        '<div class="grid h-11 w-11 place-items-center rounded-xl text-white" style="background:' + color + '">' +
+          '<i class="fa-solid ' + icon + '"></i></div>' +
+      '</div>' +
+      '<p class="mt-3 text-2xl font-bold text-slate-800">' + esc(value) +
+        (unit ? ' <span class="text-sm font-medium text-slate-400">' + esc(unit) + '</span>' : '') + '</p>' +
+      '<p class="text-xs text-slate-500">' + esc(label) + '</p></div>';
+  }
+
+  return {
+    $: $, $$: $$, esc: esc,
+    thDate: thDate, thDateShort: thDateShort, todayISO: todayISO, daysBetween: daysBetween, rangeText: rangeText,
+    roleName: roleName, typeName: typeName, typeBadge: typeBadge, statusBadge: statusBadge, statusText: statusText,
+    avatarOf: avatarOf,
+    busy: busy, idle: idle, delay: delay, btnLoading: btnLoading,
+    skTable: skTable, skCards: skCards, skForm: skForm,
+    toast: toast, ok: ok, err: err, warn: warn, confirmDel: confirmDel, confirmAsk: confirmAsk,
+    modal: modal, closeModal: closeModal,
+    fileToDataURL: fileToDataURL, bindUpload: bindUpload,
+    signaturePad: signaturePad, signatureBlockHTML: signatureBlockHTML, initSignatureBlock: initSignatureBlock,
+    emptyRow: emptyRow, pageHead: pageHead, stat: stat
+  };
+})();
+
+</script>
+<script>
+/* ---------- assets/js/print.js ---------- */
+/* ============================================================
+   print.js — สร้างใบลาและสั่งพิมพ์ด้วย window.print()
+   ============================================================ */
+var PRINT = (function () {
+
+  function esc(s) { return UI.esc(s); }
+
+  /** แท็ก CSS สำหรับหน้าต่างพิมพ์
+   *  - เปิดไฟล์ตรง ๆ : อ้าง assets/style.css ด้วย URL เต็ม (about:blank ใช้ path แบบ relative ไม่ได้)
+   *  - บน Google Apps Script : ไม่มีไฟล์ .css ให้อ้าง จึงคัดลอก <style> ในหน้าไปทั้งหมด */
+  function cssTag() {
+    var link = document.querySelector('link[href$="assets/style.css"]');
+    if (link && link.href) return '<link rel="stylesheet" href="' + link.href + '">';
+
+    var css = '';
+    Array.prototype.forEach.call(document.querySelectorAll('style'), function (s) {
+      css += (s.textContent || '') + '\n';
+    });
+    if (css) return '<style>' + css + '</style>';
+
+    try { return '<link rel="stylesheet" href="' + new URL('assets/style.css', location.href).href + '">'; }
+    catch (e) { return ''; }
+  }
+
+  var FIT_STEPS = ['pp-fit1', 'pp-fit2', 'pp-fit3', 'pp-fit4'];   /* 15.5 / 15 / 14.5 / 14 pt */
+
+  /** บีบใบลาให้จบใน 1 หน้า A4 เสมอ
+   *  ขั้นที่ 1 : ลดขนาดอักษร 16 → 14pt ทีละขั้น (ตามมาตรฐานเอกสารราชการ)
+   *  ขั้นที่ 2 : ถ้ายังไม่พอ ย่อทั้งใบตามสัดส่วน เพื่อรับประกันว่าไม่ล้นไปหน้า 2
+   */
+  function fitOnePage(win) {
+    var d = win.document;
+    var el = d.querySelector('.print-paper');
+    var inner = el && el.querySelector('.pp-inner');
+    if (!el || !inner || !win.getComputedStyle) return;
+
+    /* พื้นที่พิมพ์ = ความสูง content box ของกระดาษ (29.7 - ขอบบน - ขอบล่าง) */
+    var cs = win.getComputedStyle(el);
+    var limit = el.clientHeight - parseFloat(cs.paddingTop || 0) - parseFloat(cs.paddingBottom || 0);
+    if (!(limit > 0)) return;
+
+    /* ล้างค่าเดิมก่อนวัดใหม่ */
+    inner.style.transform = '';
+    inner.style.width = '';
+    FIT_STEPS.forEach(function (c) { el.classList.remove(c); });
+
+    function contentH() { return inner.getBoundingClientRect().height; }
+
+    /* ขั้นที่ 1 : ลดขนาดอักษร 16 -> 14pt */
+    for (var i = 0; i < FIT_STEPS.length && contentH() > limit; i++) {
+      if (i > 0) el.classList.remove(FIT_STEPS[i - 1]);
+      el.classList.add(FIT_STEPS[i]);
+    }
+
+    /* ขั้นที่ 2 : ย่อทั้งใบตามสัดส่วน ถ้า 14pt แล้วยังล้น
+       ใช้ transform:scale ซึ่งทำงานเหมือนกันทั้งบนจอและตอนพิมพ์ */
+    var h = contentH();
+    if (h > limit) {
+      var ratio = Math.max(0.45, (limit / h) * 0.98);
+      inner.style.width = (100 / ratio) + '%';
+      inner.style.transform = 'scale(' + ratio + ')';
+    }
+  }
+
+  /** รอรูปภาพ (โลโก้/ลายเซ็น) โหลดเสร็จก่อนวัดความสูง ไม่งั้นคำนวณพลาด */
+  function whenReady(win, cb) {
+    var imgs = [], i;
+    try { imgs = Array.prototype.slice.call(win.document.images); } catch (e) {}
+    var left = 0, done = false;
+    function finish() { if (!done) { done = true; cb(); } }
+    for (i = 0; i < imgs.length; i++) {
+      if (!imgs[i].complete) {
+        left++;
+        imgs[i].addEventListener('load', step);
+        imgs[i].addEventListener('error', step);
+      }
+    }
+    function step() { if (--left <= 0) ready(); }
+    /* รอฟอนต์ด้วย : ถ้าวัดก่อนฟอนต์ไทยสลับเข้ามา ความสูงจะเพี้ยนและล้นหน้า */
+    function ready() {
+      var f = win.document.fonts;
+      if (f && f.ready && f.ready.then) f.ready.then(function () { setTimeout(finish, 80); });
+      else setTimeout(finish, 300);
+    }
+    if (!left) ready();
+    setTimeout(finish, 3000);   /* กันค้างกรณีรูป/ฟอนต์โหลดไม่ขึ้น */
+  }
+
+  /** ช่องเติมข้อมูลในใบลา
+   *  มีข้อมูล  -> แสดงเป็นข้อความธรรมดา ไม่มีเส้น
+   *  ยังว่าง   -> ใส่คลาส pp-blank เพื่อขีดเส้นจุดไข่ปลาไว้ให้เขียนด้วยปากกา */
+  function dot(txt, grow) {
+    var empty = (txt == null || txt === '');
+    return '<span class="pp-dot' + (grow ? ' grow' : '') + (empty ? ' pp-blank' : '') + '">' +
+           (empty ? '&nbsp;' : esc(txt)) + '</span>';
+  }
+
+  /** ช่องลายเซ็น : มีลายเซ็นแสดงรูป ไม่มีก็ขีดเส้นไว้ให้เซ็น */
+  function sigSlot(sig, cls, style) {
+    var c = 'pp-dot ' + (cls || '') + (sig ? '' : ' pp-blank');
+    return '<span class="' + c + '"' + (style ? ' style="' + style + '"' : '') + '>' +
+           (sig ? '<img class="pp-sig-inline" src="' + sig + '" alt="ลายเซ็น">' : '&nbsp;') +
+           '</span>';
+  }
+  function cb(checked, label) {
+    return '<span style="white-space:nowrap"><span class="cb">' + (checked ? '&#10004;' : '&nbsp;') + '</span>' + esc(label) + '</span>';
+  }
+
+  /** แยกวัน / เดือน(ไทย) / พ.ศ. ของวันที่ ISO (สำหรับแบบฟอร์มที่เว้นช่องแยกกัน) */
+  function dmy(iso) {
+    if (!iso) return { d: '', m: '', y: '' };
+    var p = String(iso).split('-');
+    if (p.length < 3) return { d: iso, m: '', y: '' };
+    var M = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+             'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+    return { d: String(parseInt(p[2], 10)), m: M[parseInt(p[1], 10) - 1], y: String(parseInt(p[0], 10) + 543) };
+  }
+
+  /** ตารางสถิติการลาในใบลา (ลามาแล้ว / ลาครั้งนี้ / รวมเป็น) */
+  function statTable(l) {
+    var before = l.summaryBefore || {};
+    var h = '<table class="pp-tbl"><thead><tr>' +
+      '<th style="width:28%">ประเภทการลา</th><th>ลามาแล้ว (วัน)</th>' +
+      '<th>ลาครั้งนี้ (วัน)</th><th>รวมเป็น (วัน)</th></tr></thead><tbody>';
+    DB.FORM_TYPES.forEach(function (t) {
+      var b = Number((before[t.id] || {}).days || 0);
+      var now = (l.leaveType === t.id) ? Number(l.days || 0) : 0;
+      h += '<tr><td style="text-align:left">' + esc(t.name) + '</td>' +
+        '<td>' + b + '</td><td>' + (now || '-') + '</td><td>' + (b + now) + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+
+  /** บล็อกลายเซ็น */
+  function signBlock(label, sig, name, position, extra) {
+    return '<div class="pp-sign">' +
+      (label ? '<div>' + esc(label) + '</div>' : '') +
+      (sig ? '<img src="' + sig + '" alt="ลายเซ็น">' : '<div style="height:60px"></div>') +
+      '<div class="pp-sline' + (sig ? '' : ' pp-blank') + '"></div>' +
+      '<div>( ' + esc(name || '-') + ' )</div>' +
+      '<div>' + esc(position || '-') + '</div>' +
+      (extra ? '<div>' + esc(extra) + '</div>' : '') +
+      '</div>';
+  }
+
+  /** บล็อกลายเซ็นแบบบรรทัดจุดไข่ปลา (ใช้ในใบลาพักผ่อน) */
+  function signLine(prefix, suffix, sig, name, position, dateIso, posLabel) {
+    var h = '<div class="pp-sline-blk">';
+    h += '<div class="pp-row">' + esc(prefix || 'ลงชื่อ') +
+         sigSlot(sig, 'grow', 'text-align:center') +
+         esc(suffix || '') + '</div>';
+    h += '<div class="pp-row" style="padding-left:1.4cm">(' + dot(name || '', true) + ')</div>';
+    if (position !== false) h += '<div class="pp-row">' + esc(posLabel || 'ตำแหน่ง') + dot(position || '', true) + '</div>';
+    if (dateIso !== false) h += '<div class="pp-row">วันที่' + dot(dateIso ? UI.thDate(dateIso) : '', true) + '</div>';
+    return h + '</div>';
+  }
+
+  /** วันที่ของผู้ตรวจสอบ : ใช้วันที่ตรวจจริงถ้ามี ไม่มีก็ใช้วันที่ในใบลา
+   *  (ผู้ตรวจสอบถูกเลือกตอนยื่น จึงถือวันที่ยื่นเป็นวันที่ตรวจ) */
+  function checkerDate_(l) {
+    if (!l.checkerName) return '';          /* ไม่มีผู้ตรวจสอบ -> เว้นเส้นไว้เขียน */
+    var d = l.checkedAt || l.createdAt || l.docDate || '';
+    d = String(d).slice(0, 10);
+    return d ? UI.thDate(d) : '';
+  }
+
+  /** เหมือน signLine แต่รับวันที่เป็นข้อความไทยที่จัดรูปมาแล้ว */
+  function signLineTh_(prefix, suffix, sig, name, position, dateText, posLabel) {
+    var h = '<div class="pp-sline-blk">';
+    h += '<div class="pp-row">' + esc(prefix || 'ลงชื่อ') +
+         sigSlot(sig, 'grow', 'text-align:center') + esc(suffix || '') + '</div>';
+    h += '<div class="pp-row" style="padding-left:1.4cm">(' + dot(name || '', true) + ')</div>';
+    h += '<div class="pp-row">' + esc(posLabel || 'ตำแหน่ง') + dot(position || '', true) + '</div>';
+    h += '<div class="pp-row">วันที่' + dot(dateText || '', true) + '</div>';
+    return h + '</div>';
+  }
+
+  /** บล็อกผู้ตรวจสอบ (ใต้ตารางสถิติการลา)
+   *  ถ้ายังไม่มีข้อมูลผู้ตรวจสอบ จะเว้นเป็นเส้นจุดไข่ปลาให้ลงนามด้วยปากกา */
+  function checkerBlock_(l) {
+    return '<div class="pp-checker">' +
+      '<div class="pp-row">(ลงชื่อ)' +
+        sigSlot(l.checkerSignature, '', 'flex:0 1 6cm;text-align:center') +
+        'ผู้ตรวจสอบ</div>' +
+      '<div class="pp-row" style="padding-left:1.6cm">' + dot(l.checkerName || '', true) + '</div>' +
+      '<div class="pp-row">(ตำแหน่ง)' + dot(l.checkerPosition || '', true) + '</div>' +
+      '<div class="pp-row">วันที่' + dot(checkerDate_(l), true) + '</div>' +
+    '</div>';
+  }
+
+  /* ============================================================
+     แบบใบลาพักผ่อน (ตามแบบฟอร์มราชการ)
+     ============================================================ */
+  function vacationSheet(l) {
+    var st = DB.settings();
+    var office = l.writtenAt || st.officeName;
+    var affil = l.affiliation || st.affiliation;
+    var district = l.district || st.district || 'กู่แก้ว';
+    var doc = dmy(l.docDate), s = dmy(l.startDate), e = dmy(l.endDate);
+    var v = l.vacation || {};
+
+    var h = '<div class="print-paper pp-vac"><div class="pp-inner">';
+
+    h += '<div class="pp-head"><div class="pp-title pp-ul">แบบใบลาพักผ่อน</div></div>';
+
+    /* เขียนที่ / วันที่ */
+    h += '<div class="pp-right">' +
+         '<div class="pp-row" style="justify-content:flex-end">เขียนที่ ' + esc(office) + '</div>' +
+         '<div class="pp-row" style="justify-content:flex-end">วันที่ ' + dot(doc.d) +
+           ' เดือน ' + dot(doc.m) + ' พ.ศ. ' + dot(doc.y) + '</div>' +
+         '</div>';
+
+    h += '<div class="pp-row"><b>เรื่อง</b>&nbsp;&nbsp;ขอลาพักผ่อน</div>';
+    h += '<div class="pp-row"><b>เรียน</b>&nbsp;&nbsp;นายอำเภอ' + esc(district) + '</div>';
+
+    /* ย่อหน้าที่ 1 */
+    h += '<div class="pp-para">' +
+         '<span class="pp-ind2"></span>ข้าพเจ้า ' + dot(l.applicantName, true) +
+         ' ตำแหน่ง ' + dot(l.applicantPosition, true) +
+         ' สังกัด ' + dot(affil, true) +
+         ' มีวันลาพักผ่อนสะสม ' + dot(v.carry) +
+         ' มีสิทธิลาพักผ่อนประจำปีนี้อีก ' + dot(v.remain) + ' วันทำการ' +
+         ' รวมเป็น ' + dot(v.total) + ' วันทำการ' +
+         '</div>';
+
+    /* ย่อหน้าที่ 2 */
+    h += '<div class="pp-para">' +
+         '<span class="pp-ind2"></span>ขอลาพักผ่อน ตั้งแต่วันที่ ' + dot(s.d) + ' เดือน ' + dot(s.m) + ' พ.ศ. ' + dot(s.y) +
+         ' ถึงวันที่ ' + dot(e.d) + ' เดือน ' + dot(e.m) + ' พ.ศ. ' + dot(e.y) +
+         ' กำหนด ' + dot(l.days) + ' วัน' +
+         ' ในระหว่างลาจะติดต่อข้าพเจ้าได้ที่ โทรศัพท์ ' + dot(l.contact, true) +
+         '</div>';
+
+    /* ลงชื่อผู้ลา : บล็อกชิดขวา ลายเซ็นอยู่แถวเดียวกับคำว่า "ลงชื่อ"
+       ทั้งสามบรรทัดชิดซ้ายในกล่องเดียวกัน "ลงชื่อ" จึงตรงกับวงเล็บเปิดของชื่อ */
+    h += '<div class="pp-sign pp-sign-right">' +
+         '<div class="pp-sign-lines">' +
+           '<div class="pp-signrow">ลงชื่อ' +
+             (l.signature
+               ? '<img class="pp-sig-inline" src="' + l.signature + '" alt="ลายเซ็น">'
+               : '<span class="pp-dotline pp-blank"></span>') +
+           '</div>' +
+           '<div>( ' + esc(l.applicantName || '-') + ' )</div>' +
+           '<div>ตำแหน่ง ' + esc(l.applicantPosition || '-') + '</div>' +
+         '</div>' +
+         '</div>';
+
+    /* สถิติการลาพักผ่อน */
+    h += '<div class="pp-ul" style="font-weight:700">สถิติการลาในปีงบประมาณนี้</div>' +
+         '<table class="pp-tbl" style="width:62%;margin-left:0">' +
+         '<thead><tr><th>ลามาแล้ว<br>(วันทำการ)</th><th>ลาครั้งนี้<br>(เว้นวันทำการ)</th>' +
+         '<th>รวมเป็น<br>(วันทำการ)</th></tr></thead><tbody>' +
+         '<tr><td>' + esc(v.used != null ? v.used : 0) + '</td><td>' + esc(l.days || 0) + '</td>' +
+         '<td>' + esc(Number(v.used || 0) + Number(l.days || 0)) + '</td></tr>' +
+         '</tbody></table>';
+
+    /* สองคอลัมน์ล่าง */
+    h += '<div class="pp-cols" style="margin-top:16px">';
+
+    /* ซ้าย : ผู้ตรวจสอบ + ผู้ปฏิบัติงานแทน */
+    h += '<div>';
+    h += signLineTh_('(ลงชื่อ)', 'ผู้ตรวจสอบ', l.checkerSignature, l.checkerName, l.checkerPosition,
+                     checkerDate_(l), '(ตำแหน่ง)');
+    h += '<div style="margin-top:12px"><span class="pp-ul">หมายเหตุ</span> ขอมอบหมายงานในหน้าที่ของข้าพเจ้า</div>' +
+         '<div class="pp-row">ให้ ' + dot(l.deputyName, true) + ' ตำแหน่ง ' + dot(l.deputyPosition, true) +
+         ' เป็นผู้ปฏิบัติงานแทน</div>';
+    h += signLine('(ลงลายมือชื่อ)', 'ผู้ปฏิบัติงานแทน', l.deputySignature, l.deputyName, false, false, '');
+    h += '<div class="pp-row">วันที่ ' + dot(dmy(l.docDate).d) + ' เดือน ' + dot(dmy(l.docDate).m) +
+         ' พ.ศ. ' + dot(dmy(l.docDate).y) + '</div>';
+    h += '</div>';
+
+    /* ขวา : ความเห็นผู้บังคับบัญชา (สาธารณสุขอำเภอ) + คำสั่ง (นายอำเภอ)
+       ถ้ายังไม่ได้ให้ความเห็น ดึงชื่อ/ตำแหน่งสาธารณสุขอำเภอจากระบบมาแสดงไว้ก่อน */
+    var boss = DB.chief() || {};
+    var bossName = l.chiefName || boss.fullname || '';
+    var bossPos = l.chiefPosition || boss.position || 'สาธารณสุขอำเภอ' + district;
+
+    h += '<div>';
+    h += '<div style="text-align:center;font-weight:700" class="pp-ul">ความเห็นผู้บังคับบัญชา</div>' +
+         '<div class="pp-row">' + dot(l.chiefComment || '', true) + '</div>';
+    h += signLine('ลงชื่อ', '', l.chiefSignature, bossName, bossPos,
+                  l.chiefDecidedAt ? String(l.chiefDecidedAt).slice(0, 10) : '', 'ตำแหน่ง');
+    /* คำสั่ง : เว้นว่างให้นายอำเภอลงนามด้วยปากกา */
+    h += '<div style="margin-top:18px;text-align:center;font-weight:700" class="pp-ul">คำสั่ง</div>' +
+         '<div style="text-align:center">' + cb(false, 'อนุญาต') +
+         '&nbsp;&nbsp;&nbsp;&nbsp;' + cb(false, 'ไม่อนุญาต') + '</div>';
+    /* เว้นทุกช่องไว้ให้เขียนเอง รวมถึงตำแหน่ง */
+    h += signLine('ลงชื่อ', '', '', '', '', '', 'ตำแหน่ง');
+    h += '</div>';
+
+    h += '</div>';
+    return h + '</div></div>';
+  }
+
+  /** HTML ใบลาหนึ่งใบ */
+  function sheetHTML(l) {
+    if (l.leaveType === 'vacation') return vacationSheet(l);
+    return normalSheet(l);
+  }
+
+  function normalSheet(l) {
+    var st = DB.settings();
+    var logo = st.logo || DB.DEFAULT_LOGO;
+    var office = l.writtenAt || st.officeName;
+    var affil = l.affiliation || st.affiliation;
+
+    var h = '<div class="print-paper"><div class="pp-inner">';
+
+    /* หัวกระดาษ */
+    h += '<div class="pp-head">' +
+         '<img class="pp-logo" src="' + logo + '" alt="โลโก้">' +
+         '<div class="pp-title">แบบใบลาป่วย ลากิจส่วนตัว ลาคลอดบุตร</div>' +
+         '<div>' + esc(office) + '</div>' +
+         '</div>';
+
+    /* เขียนที่ / วันที่ */
+    h += '<div style="text-align:right;margin-top:6px">' +
+         '<div class="pp-row" style="justify-content:flex-end">เขียนที่ ' + dot(office) + '</div>' +
+         '<div class="pp-row" style="justify-content:flex-end">วันที่ ' + dot(UI.thDate(l.docDate)) + '</div>' +
+         '</div>';
+
+    h += '<div class="pp-row">เรื่อง ' + dot(l.subject, true) + '</div>';
+    h += '<div>เรียน สาธารณสุขอำเภอกู่แก้ว</div>';
+
+    /* เนื้อหา */
+    h += '<div class="pp-row pp-ind">ข้าพเจ้า ' + dot(l.applicantName, true) +
+         ' ตำแหน่ง ' + dot(l.applicantPosition, true) + '</div>';
+    h += '<div class="pp-row">สังกัด ' + dot(affil, true) + '</div>';
+
+    h += '<div class="pp-row">ขอลา ' +
+         cb(l.leaveType === 'sick', 'ลาป่วย') + ' ' +
+         cb(l.leaveType === 'personal', 'ลากิจส่วนตัว') + ' ' +
+         cb(l.leaveType === 'maternity', 'ลาคลอดบุตร') +
+         ' เนื่องจาก ' + dot(l.reason, true) + '</div>';
+
+    h += '<div class="pp-row">ตั้งแต่วันที่ ' + dot(UI.thDate(l.startDate)) +
+         ' ถึงวันที่ ' + dot(UI.thDate(l.endDate)) +
+         ' มีกำหนด ' + dot(l.days) + ' วัน</div>';
+
+    /* การลาครั้งสุดท้าย */
+    if (l.lastType) {
+      h += '<div class="pp-row pp-ind">ข้าพเจ้าได้ลา ' +
+           cb(l.lastType === 'sick', 'ลาป่วย') + ' ' +
+           cb(l.lastType === 'personal', 'ลากิจส่วนตัว') + ' ' +
+           cb(l.lastType === 'maternity', 'ลาคลอดบุตร') + '</div>';
+      h += '<div class="pp-row">ครั้งสุดท้ายตั้งแต่วันที่ ' + dot(UI.thDate(l.lastStart)) +
+           ' ถึงวันที่ ' + dot(UI.thDate(l.lastEnd)) +
+           ' มีกำหนด ' + dot(l.lastDays) + ' วัน</div>';
+    } else {
+      h += '<div class="pp-row pp-ind">ข้าพเจ้าได้ลา ' +
+           cb(false, 'ลาป่วย') + ' ' + cb(false, 'ลากิจส่วนตัว') + ' ' + cb(false, 'ลาคลอดบุตร') +
+           ' ครั้งสุดท้ายตั้งแต่วันที่ ' + dot('-') + ' ถึงวันที่ ' + dot('-') +
+           ' มีกำหนด ' + dot('-') + ' วัน</div>';
+    }
+
+    h += '<div class="pp-row">ในระหว่างลาจะติดต่อข้าพเจ้าได้ที่ ' + dot(l.contact, true) + '</div>';
+
+    /* ลงชื่อผู้ลา */
+    h += '<div style="width:52%;margin-left:auto">' +
+         signBlock('ขอแสดงความนับถือ', l.signature, l.applicantName, l.applicantPosition) +
+         '</div>';
+
+    /* สถิติการลา */
+    h += '<div style="margin-top:10px;font-weight:700">สถิติการลาในปีงบประมาณ ' +
+         esc(l.fyName || '-') + ' (รอบที่ ' + esc(l.round || '-') + ')</div>';
+    h += statTable(l);
+
+    /* ผู้ตรวจสอบ : เว้นไว้ให้ลงนามด้วยปากกาบนเอกสารที่พิมพ์ */
+    h += checkerBlock_(l);
+
+    /* ความเห็น/คำสั่งสาธารณสุขอำเภอ */
+    h += '<div class="pp-cols">';
+    h += '<div><div style="font-weight:700">ความเห็นผู้บังคับบัญชา</div>' +
+         '<div class="pp-row">' + dot(l.chiefComment || '', true) + '</div>' +
+         signBlock('', l.chiefSignature, l.chiefName, l.chiefPosition) + '</div>';
+    h += '<div><div style="font-weight:700">คำสั่ง</div>' +
+         '<div>' + cb(l.status === 'approved', 'อนุญาต') + ' ' +
+         cb(l.status === 'rejected', 'ไม่อนุญาต') + '</div>' +
+         signBlock('', l.chiefSignature, l.chiefName, l.chiefPosition,
+           l.chiefDecidedAt ? 'วันที่ ' + UI.thDate(String(l.chiefDecidedAt).slice(0, 10)) : '') + '</div>';
+    h += '</div>';
+
+    return h + '</div></div>';
+  }
+
+  /** เอกสารใบลาฉบับเต็ม (ใช้ทั้งหน้าต่างพิมพ์และพรีวิว จึงได้ผลลัพธ์ตรงกัน) */
+  function docHTML(l) {
+    return '<!doctype html><html lang="th"><head><meta charset="utf-8">' +
+      '<title>ใบลา - ' + esc(l.applicantName || '') + '</title>' +
+      '<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">' +
+      cssTag() +
+      '</head><body style="background:#fff;margin:0">' + sheetHTML(l) + '</body></html>';
+  }
+
+  /** เปิดหน้าต่างใหม่แล้วสั่งพิมพ์ (window print) */
+  function leave(leaveOrId) {
+    var l = (typeof leaveOrId === 'string') ? DB.leaveById(leaveOrId) : leaveOrId;
+    if (!l) { UI.err('ไม่พบข้อมูลใบลา'); return; }
+
+    UI.busy('กำลังเตรียมใบลา...');
+    var html = docHTML(l);
+
+    var w = window.open('', '_blank');
+    if (!w) {
+      UI.idle();
+      UI.warn('เบราว์เซอร์บล็อกหน้าต่างใหม่', 'กรุณาอนุญาต Pop-up ของเว็บไซต์นี้ แล้วลองพิมพ์อีกครั้ง');
+      return;
+    }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+
+    /* รอฟอนต์/รูปภาพโหลดก่อนสั่งพิมพ์ */
+    var fire = function () {
+      whenReady(w, function () {
+        try { fitOnePage(w); } catch (e) {}
+        UI.idle();
+        try { w.focus(); w.print(); } catch (e) {}
+      });
+    };
+    if (w.document.readyState === 'complete') fire();
+    else w.addEventListener('load', fire);
+  }
+
+  /** พรีวิวใบลาใน modal — เรนเดอร์ใน iframe ขนาด A4 จริง แล้วย่อแสดงด้วย transform
+   *  จึงเห็นหน้าตาตรงกับที่พิมพ์ออกมาทุกประการ (รวมการย่อให้พอดี 1 หน้า) */
+  var PV_SCALE = 0.62;
+  function preview(leaveOrId) {
+    var l = (typeof leaveOrId === 'string') ? DB.leaveById(leaveOrId) : leaveOrId;
+    if (!l) { UI.err('ไม่พบข้อมูลใบลา'); return; }
+
+    UI.modal({
+      title: 'ใบลา', sub: UI.typeName(l.leaveType) + ' · ' + UI.rangeText(l.startDate, l.endDate),
+      icon: 'fa-file-lines', size: 'max-w-3xl',
+      body: '<p class="mb-2 text-xs text-slate-400"><i class="fa-regular fa-file-lines"></i> ' +
+              'A4 แนวตั้ง · ขอบ บน 2.2 / ล่าง 2.0 / ซ้าย 3.0 / ขวา 2.0 ซม. · ' +
+              '<span id="pvFit"></span></p>' +
+            '<div class="overflow-auto rounded-xl bg-slate-100 p-3">' +
+              '<div style="width:' + (21 * PV_SCALE) + 'cm;height:' + (29.6 * PV_SCALE) + 'cm;margin:0 auto">' +
+                '<iframe id="pvFrame" title="ตัวอย่างใบลา" style="width:21cm;height:29.6cm;border:0;' +
+                  'background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.15);display:block;' +
+                  'transform:scale(' + PV_SCALE + ');transform-origin:top left"></iframe>' +
+              '</div>' +
+            '</div>',
+      foot: '<button class="btn-ghost" data-modal-close>ปิด</button>' +
+            '<button class="btn-primary" id="pvPrint"><i class="fa-solid fa-print"></i> พิมพ์ใบลา</button>',
+      onOpen: function () {
+        var fr = UI.$('#pvFrame');
+        var fw = fr.contentWindow;
+        fw.document.open();
+        fw.document.write(docHTML(l));
+        fw.document.close();
+
+        /* รอฟอนต์/รูปโหลด แล้วย่อให้พอดี 1 หน้าเหมือนตอนพิมพ์ */
+        whenReady(fw, function () {
+          try { fitOnePage(fw); } catch (e) {}
+          var el = fw.document.querySelector('.print-paper');
+          var lbl = UI.$('#pvFit');
+          if (el && lbl) {
+            var size = fw.getComputedStyle(el).fontSize;
+            lbl.innerHTML = '<span class="text-slate-500">ขนาดอักษร ' +
+              esc(Math.round(parseFloat(size) * 0.75 * 10) / 10) + ' pt · พอดี 1 หน้า</span>';
+          }
+        });
+
+        /* พิมพ์จากพรีวิวโดยตรง = ได้หน้าตาเดียวกับที่เห็น */
+        UI.$('#pvPrint').addEventListener('click', function () {
+          try { fw.focus(); fw.print(); } catch (e) { leave(l); }
+        });
+      }
+    });
+  }
+
+  return { leave: leave, preview: preview, sheetHTML: sheetHTML, docHTML: docHTML };
+})();
+
+</script>
+<script>
+/* ---------- assets/js/auth.js ---------- */
+/* ============================================================
+   auth.js — เข้าสู่ระบบ / ออกจากระบบ
+   ============================================================ */
+var AUTH = (function () {
+  var $ = UI.$;
+
+  function fillLoginBrand() {
+    var s = DB.settings();
+    $('#loginLogo').src = s.logo || DB.DEFAULT_LOGO;
+    $('#loginOffice').textContent = s.officeName || '';
+    $('#loginAffil').textContent = s.affiliation || '';
+    $('#loginFooter').textContent = 'ระบบการลา บุคลากรเจ้าหน้าที่ ' + (s.officeName || '');
+  }
+
+  function bind() {
+    fillLoginBrand();
+
+    /* ปุ่มดู/ซ่อนรหัสผ่าน */
+    UI.$$('[data-pw]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var inp = b.parentNode.querySelector('input');
+        var show = inp.type === 'password';
+        inp.type = show ? 'text' : 'password';
+        b.innerHTML = '<i class="fa-regular ' + (show ? 'fa-eye-slash' : 'fa-eye') + '"></i>';
+      });
+    });
+
+    $('#loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = e.target.querySelector('button[type=submit], button:not([type])');
+      var fd = new FormData(e.target);
+      var u = String(fd.get('username') || '').trim();
+      var p = String(fd.get('password') || '');
+      if (!u || !p) { UI.warn('กรอกข้อมูลไม่ครบ', 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'); return; }
+
+      UI.btnLoading(btn, true, 'กำลังตรวจสอบ...');
+      UI.delay(650).then(function () {
+        var user = DB.login(u, p);
+        UI.btnLoading(btn, false);
+        if (!user) { UI.err('เข้าสู่ระบบไม่สำเร็จ', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'); return; }
+        DB.setSession(user.id);
+        e.target.reset();
+        UI.toast('ยินดีต้อนรับ ' + user.fullname);
+        APP.enterApp(user);
+      });
+    });
+
+    $('#btnLogout').addEventListener('click', function () {
+      UI.confirmAsk('ออกจากระบบ?', 'ท่านต้องการออกจากระบบใช่หรือไม่', '<i class="fa-solid fa-power-off"></i> ออกจากระบบ')
+        .then(function (yes) {
+          if (!yes) return;
+          UI.busy('กำลังออกจากระบบ...');
+          DB.flush();                      /* ส่งข้อมูลที่ค้างขึ้นเซิร์ฟเวอร์ก่อน */
+          UI.delay(450).then(function () {
+            DB.clearSession();
+            UI.idle();
+            APP.showLogin();
+          });
+        });
+    });
+  }
+
+  return { bind: bind, fillLoginBrand: fillLoginBrand };
+})();
+
+</script>
+<script>
+/* ---------- assets/js/admin.js ---------- */
+/* ============================================================
+   admin.js — หน้าสำหรับผู้ดูแลระบบ
+   ============================================================ */
+var ADMIN = (function () {
+  var $ = UI.$, $$ = UI.$$, esc = UI.esc;
+
+  var MENU = [
+    { id: 'dash',     icon: 'fa-gauge-high',      label: 'แดชบอร์ด',        title: 'แดชบอร์ด',             sub: 'ภาพรวมระบบการลา' },
+    { id: 'settings', icon: 'fa-gear',            label: 'ตั้งค่าระบบ',      title: 'ตั้งค่าระบบ',           sub: 'ชื่อสังกัด และโลโก้หน่วยงาน' },
+    { id: 'users',    icon: 'fa-users-gear',      label: 'จัดการผู้ใช้งาน',  title: 'จัดการผู้ใช้งาน',       sub: 'เพิ่ม / แก้ไข / ลบ ผู้ใช้งานระบบ' },
+    { id: 'fy',       icon: 'fa-calendar-days',   label: 'จัดการปีงบประมาณ', title: 'จัดการปีงบประมาณ',     sub: 'กำหนดรอบที่ 1 / รอบที่ 2 และปีปัจจุบัน' },
+    { id: 'leaves',   icon: 'fa-file-lines',      label: 'รายการลาทั้งหมด',  title: 'รายการลาทั้งหมด',       sub: 'กรองข้อมูล ดูรายละเอียด และพิมพ์ใบลา' },
+    { id: 'stats',    icon: 'fa-chart-column',    label: 'สรุปสถิติการลา',   title: 'สรุปสถิติการลา',        sub: 'สถิติรายบุคคลตามปีงบประมาณ' }
+  ];
+
+  function render(page, body) {
+    if (page === 'dash')     return dash(body);
+    if (page === 'settings') return settings(body);
+    if (page === 'users')    return users(body);
+    if (page === 'fy')       return fy(body);
+    if (page === 'leaves')   return leaves(body);
+    if (page === 'stats')    return stats(body);
+  }
+
+  /* ================= แดชบอร์ด ================= */
+  function dash(body) {
+    body.innerHTML = UI.skCards(4);
+    UI.delay().then(function () {
+      var all = DB.leaves(), f = DB.currentFY();
+      var inFy = f ? all.filter(function (l) { return l.fyId === f.id; }) : all;
+      var wait = inFy.filter(function (l) { return (l.status || 'pending') === 'pending'; }).length;
+      var ok = inFy.filter(function (l) { return l.status === 'approved'; }).length;
+      var no = inFy.filter(function (l) { return l.status === 'rejected'; }).length;
+
+      var h = UI.pageHead('ภาพรวมระบบ', 'ปีงบประมาณ ' + (f ? f.name : '-'));
+      h += '<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">' +
+        UI.stat('fa-users', '#DB2777', 'ผู้ใช้งานทั้งหมด', DB.users().length, 'คน') +
+        UI.stat('fa-clock', '#F57C00', 'รออนุญาต', wait, 'รายการ') +
+        UI.stat('fa-circle-check', '#26A69A', 'อนุญาตแล้ว', ok, 'รายการ') +
+        UI.stat('fa-circle-xmark', '#EF5350', 'ไม่อนุญาต', no, 'รายการ') +
+        '</div>';
+
+      /* 5 รายการล่าสุด */
+      var recent = all.slice().sort(function (a, b) {
+        return String(b.createdAt || '').localeCompare(String(a.createdAt || ''));
+      }).slice(0, 5);
+
+      h += '<div class="mt-6 card card-pad">' +
+        '<p class="mb-3 font-bold text-slate-800"><i class="fa-regular fa-clock text-brand-600"></i> รายการลาล่าสุด</p>' +
+        '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+        '<th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>วันที่ลา</th><th>วัน</th><th>สถานะ</th></tr></thead><tbody>';
+      if (!recent.length) h += UI.emptyRow(5, 'ยังไม่มีรายการลา');
+      recent.forEach(function (l) {
+        h += '<tr><td>' + esc(l.applicantName) + '</td><td class="td-c">' + UI.typeBadge(l.leaveType) + '</td>' +
+          '<td class="td-c">' + esc(UI.rangeText(l.startDate, l.endDate)) + '</td>' +
+          '<td class="td-c">' + esc(l.days) + '</td><td class="td-c">' + UI.statusBadge(l.status) + '</td></tr>';
+      });
+      h += '</tbody></table></div></div>';
+      body.innerHTML = h;
+    });
+  }
+
+  /* ================= ตั้งค่าระบบ ================= */
+  function settings(body) {
+    body.innerHTML = UI.skForm();
+    UI.delay().then(function () {
+      var s = DB.settings();
+      body.innerHTML = UI.pageHead('ตั้งค่าระบบ', 'ข้อมูลหน่วยงานที่แสดงในระบบและใบลา') +
+        '<form id="stForm" class="card card-pad max-w-2xl space-y-4">' +
+          '<div><label class="lbl">ชื่อสำนักงาน <span class="req">*</span></label>' +
+            '<input name="officeName" class="inp" value="' + esc(s.officeName) + '" required></div>' +
+          '<div><label class="lbl">ชื่อสังกัด <span class="req">*</span></label>' +
+            '<input name="affiliation" class="inp" value="' + esc(s.affiliation) + '" required></div>' +
+          '<div><label class="lbl">โลโก้กระทรวงสาธารณสุข</label>' +
+            '<div class="flex items-center gap-4">' +
+              '<img id="stPrev" class="up-prev-wide" src="' + (s.logo || DB.DEFAULT_LOGO) + '" alt="โลโก้">' +
+              '<div class="flex-1"><input type="file" id="stLogo" accept="image/*" class="inp">' +
+              '<p class="mt-1 text-xs text-slate-400">ไม่บังคับ · ระบบจะย่อขนาดรูปอัตโนมัติ</p></div>' +
+            '</div></div>' +
+          '<div class="flex justify-end gap-2 pt-2">' +
+            '<button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่า</button>' +
+          '</div>' +
+        '</form>';
+
+      UI.bindUpload($('#stLogo'), $('#stPrev'), 400, 400);
+      $('#stForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = e.target.querySelector('button[type=submit]');
+        var fd = new FormData(e.target);
+        UI.btnLoading(btn, true);
+        UI.delay(500).then(function () {
+          DB.saveSettings({
+            officeName: String(fd.get('officeName')).trim(),
+            affiliation: String(fd.get('affiliation')).trim(),
+            logo: $('#stLogo').dataset.value || ''
+          });
+          UI.btnLoading(btn, false);
+          APP.renderShell();
+          AUTH.fillLoginBrand();
+          UI.ok('บันทึกสำเร็จ', 'อัปเดตข้อมูลหน่วยงานเรียบร้อย');
+        });
+      });
+    });
+  }
+
+  /* ================= จัดการผู้ใช้งาน ================= */
+  function users(body) {
+    body.innerHTML = UI.skTable(6, 6);
+    UI.delay().then(function () {
+      var list = DB.users();
+      var h = UI.pageHead('จัดการผู้ใช้งาน', 'ทั้งหมด ' + list.length + ' บัญชี',
+        '<button class="btn-primary" id="uAdd"><i class="fa-solid fa-user-plus"></i> เพิ่มผู้ใช้งาน</button>');
+      h += '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+        '<th style="width:60px">ลำดับ</th><th>ชื่อ-นามสกุล</th><th>ชื่อผู้ใช้</th>' +
+        '<th>สิทธิ์</th><th>ตำแหน่ง</th><th style="width:130px">จัดการ</th></tr></thead><tbody>';
+      if (!list.length) h += UI.emptyRow(6);
+      list.forEach(function (u, i) {
+        h += '<tr><td class="td-c">' + (i + 1) + '</td>' +
+          '<td><div class="flex items-center gap-2"><img src="' + UI.avatarOf(u) +
+            '" class="h-8 w-8 rounded-full object-cover ring-1 ring-brand-100"><span>' + esc(u.fullname) + '</span></div></td>' +
+          '<td class="td-c">' + esc(u.username) + '</td>' +
+          '<td class="td-c"><span class="badge badge-brand">' + esc(UI.roleName(u.role)) + '</span></td>' +
+          '<td>' + esc(u.position || '-') + '</td>' +
+          '<td class="td-c"><div class="flex justify-center gap-1.5">' +
+            '<button class="ibtn ibtn-edit" data-edit="' + u.id + '" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>' +
+            '<button class="ibtn ibtn-del" data-del="' + u.id + '" title="ลบ"><i class="fa-solid fa-trash"></i></button>' +
+          '</div></td></tr>';
+      });
+      h += '</tbody></table></div>';
+      body.innerHTML = h;
+
+      $('#uAdd').addEventListener('click', function () { userForm(null); });
+      $$('[data-edit]', body).forEach(function (b) {
+        b.addEventListener('click', function () { userForm(DB.userById(b.dataset.edit)); });
+      });
+      $$('[data-del]', body).forEach(function (b) {
+        b.addEventListener('click', function () {
+          var u = DB.userById(b.dataset.del);
+          if (u && u.id === APP.user().id) { UI.warn('ลบไม่ได้', 'ไม่สามารถลบบัญชีที่กำลังใช้งานอยู่'); return; }
+          UI.confirmDel('ลบผู้ใช้ "' + (u ? u.fullname : '') + '"?',
+            'ข้อมูลการลาของผู้ใช้นี้จะถูกลบทั้งหมด').then(function (yes) {
+            if (!yes) return;
+            UI.busy('กำลังลบข้อมูล...');
+            UI.delay(400).then(function () {
+              DB.deleteUser(b.dataset.del);
+              UI.idle(); UI.toast('ลบผู้ใช้งานเรียบร้อย'); APP.reload();
+            });
+          });
+        });
+      });
+    });
+  }
+
+  function userForm(u) {
+    var isNew = !u;
+    u = u || { role: 'staff' };
+    var roleOpts = DB.ROLES.map(function (r) {
+      return '<option value="' + r.id + '"' + (u.role === r.id ? ' selected' : '') + '>' + esc(r.name) + '</option>';
+    }).join('');
+
+    UI.modal({
+      title: isNew ? 'เพิ่มผู้ใช้งาน' : 'แก้ไขผู้ใช้งาน',
+      sub: isNew ? 'กรอกข้อมูลบัญชีผู้ใช้ใหม่' : esc(u.fullname),
+      icon: isNew ? 'fa-user-plus' : 'fa-user-pen',
+      body: '<form id="uForm" class="space-y-4" autocomplete="off">' +
+        '<div class="grid gap-4 sm:grid-cols-2">' +
+          '<div><label class="lbl">ชื่อผู้ใช้ (Username) <span class="req">*</span></label>' +
+            '<input name="username" class="inp" value="' + esc(u.username || '') + '" required></div>' +
+          '<div><label class="lbl">รหัสผ่าน (Password) <span class="req">*</span></label>' +
+            '<input name="password" class="inp" value="' + esc(u.password || '') + '" required></div>' +
+        '</div>' +
+        '<div><label class="lbl">ชื่อ-นามสกุล <span class="req">*</span></label>' +
+          '<input name="fullname" class="inp" value="' + esc(u.fullname || '') + '" required></div>' +
+        '<div class="grid gap-4 sm:grid-cols-2">' +
+          '<div><label class="lbl">สิทธิ์การใช้งาน <span class="req">*</span></label>' +
+            '<select name="role" id="uRole" class="sel">' + roleOpts + '</select></div>' +
+          '<div id="uPosWrap" class="' + (u.role === 'staff' ? '' : 'hidden') + '">' +
+            '<label class="lbl">ตำแหน่ง <span class="req">*</span></label>' +
+            '<input name="position" id="uPos" class="inp" value="' + esc(u.position || '') + '"></div>' +
+        '</div>' +
+        '<div class="rounded-2xl border border-brand-100 bg-brand-50/40 p-3">' +
+          '<p class="mb-2 text-sm font-semibold text-brand-700"><i class="fa-solid fa-umbrella-beach"></i> สิทธิลาพักผ่อน</p>' +
+          '<div class="grid gap-3 sm:grid-cols-2">' +
+            '<div><label class="lbl">วันลาพักผ่อนสะสมยกมา (วันทำการ)</label>' +
+              '<input type="number" min="0" name="vacationCarry" class="inp" value="' + esc(u.vacationCarry == null ? 0 : u.vacationCarry) + '"></div>' +
+            '<div><label class="lbl">สิทธิลาพักผ่อนประจำปี (วันทำการ)</label>' +
+              '<input type="number" min="0" name="vacationQuota" class="inp" value="' + esc(u.vacationQuota == null ? DB.VACATION_QUOTA : u.vacationQuota) + '"></div>' +
+          '</div>' +
+          '<p class="mt-1.5 text-xs text-slate-400">ระบบจะดึงไปกรอกในแบบใบลาพักผ่อนให้อัตโนมัติ</p>' +
+        '</div>' +
+        '<div><label class="lbl">รูปภาพโปรไฟล์</label>' +
+          '<div class="flex items-center gap-4">' +
+            '<img id="uPrev" class="up-prev" src="' + UI.avatarOf(u) + '" alt="โปรไฟล์">' +
+            '<div class="flex-1"><input type="file" id="uAvatar" accept="image/*" class="inp">' +
+            '<p class="mt-1 text-xs text-slate-400">ไม่บังคับ</p></div>' +
+          '</div></div>' +
+        '<div><label class="lbl">รูปภาพลายเซ็น</label>' +
+          '<div class="flex items-center gap-4">' +
+            '<img id="uSigPrev" class="up-prev-wide ' + (u.signature ? '' : 'hidden') + '" src="' + (u.signature || '') + '" alt="ลายเซ็น">' +
+            '<div class="flex-1"><input type="file" id="uSig" accept="image/*" class="inp">' +
+            '<p class="mt-1 text-xs text-slate-400">ไม่บังคับ · ใช้ประกอบใบลา</p></div>' +
+          '</div></div>' +
+        '</form>',
+      foot: '<button class="btn-ghost" data-modal-close>ยกเลิก</button>' +
+            '<button class="btn-primary" id="uSave"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</button>',
+      onOpen: function () {
+        UI.bindUpload($('#uAvatar'), $('#uPrev'), 400, 400);
+        UI.bindUpload($('#uSig'), $('#uSigPrev'), 600, 300);
+        $('#uRole').addEventListener('change', function () {
+          $('#uPosWrap').classList.toggle('hidden', $('#uRole').value !== 'staff');
+        });
+        $('#uSave').addEventListener('click', function () {
+          var form = $('#uForm'), fd = new FormData(form);
+          var data = {
+            id: u.id,
+            username: String(fd.get('username') || '').trim(),
+            password: String(fd.get('password') || ''),
+            fullname: String(fd.get('fullname') || '').trim(),
+            role: String(fd.get('role') || 'staff'),
+            position: String(fd.get('position') || '').trim(),
+            vacationCarry: Math.max(0, Number(fd.get('vacationCarry') || 0)),
+            vacationQuota: Math.max(0, Number(fd.get('vacationQuota') || DB.VACATION_QUOTA))
+          };
+          if (!data.username || !data.password || !data.fullname) {
+            UI.warn('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบถ้วน'); return;
+          }
+          if (data.role === 'staff' && !data.position) {
+            UI.warn('ข้อมูลไม่ครบ', 'กรุณากรอกตำแหน่งของเจ้าหน้าที่'); return;
+          }
+          if (DB.usernameTaken(data.username, u.id)) {
+            UI.warn('ชื่อผู้ใช้ซ้ำ', 'มีผู้ใช้ชื่อนี้ในระบบแล้ว'); return;
+          }
+          if (data.role === 'chief') {
+            var other = DB.chief();
+            if (other && other.id !== u.id) {
+              UI.warn('มีสาธารณสุขอำเภอแล้ว', 'ระบบกำหนดให้มีสาธารณสุขอำเภอได้เพียง 1 บัญชี'); return;
+            }
+          }
+          if ($('#uAvatar').dataset.value) data.avatar = $('#uAvatar').dataset.value;
+          if ($('#uSig').dataset.value) data.signature = $('#uSig').dataset.value;
+
+          var btn = $('#uSave');
+          UI.btnLoading(btn, true);
+          UI.delay(500).then(function () {
+            DB.saveUser(data);
+            UI.btnLoading(btn, false);
+            UI.closeModal();
+            UI.toast(isNew ? 'เพิ่มผู้ใช้งานเรียบร้อย' : 'แก้ไขข้อมูลเรียบร้อย');
+            if (u.id === APP.user().id) APP.refreshUser();
+            APP.reload();
+          });
+        });
+      }
+    });
+  }
+
+  /* ================= จัดการปีงบประมาณ ================= */
+  function fy(body) {
+    body.innerHTML = UI.skTable(5, 6);
+    UI.delay().then(function () {
+      var list = DB.fiscalYears();
+      var h = UI.pageHead('จัดการปีงบประมาณ', 'ทั้งหมด ' + list.length + ' ปีงบประมาณ',
+        '<button class="btn-primary" id="fAdd"><i class="fa-solid fa-plus"></i> เพิ่มปีงบประมาณ</button>');
+      h += '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+        '<th style="width:60px">ลำดับ</th><th>ชื่อปีงบประมาณ</th><th>รอบที่ 1</th><th>รอบที่ 2</th>' +
+        '<th>สถานะ</th><th style="width:150px">จัดการ</th></tr></thead><tbody>';
+      if (!list.length) h += UI.emptyRow(6);
+      list.forEach(function (f, i) {
+        h += '<tr><td class="td-c">' + (i + 1) + '</td>' +
+          '<td class="td-c font-semibold">' + esc(f.name) + '</td>' +
+          '<td class="td-c">' + esc(UI.rangeText(f.r1Start, f.r1End)) + '</td>' +
+          '<td class="td-c">' + esc(UI.rangeText(f.r2Start, f.r2End)) + '</td>' +
+          '<td class="td-c">' + (f.current
+            ? '<span class="badge badge-ok"><i class="fa-solid fa-star"></i> ปีปัจจุบัน</span>'
+            : '<span class="badge badge-gray">ไม่ใช่ปีปัจจุบัน</span>') + '</td>' +
+          '<td class="td-c"><div class="flex justify-center gap-1.5">' +
+            (f.current ? '' : '<button class="ibtn ibtn-star" data-cur="' + f.id + '" title="ตั้งเป็นปีปัจจุบัน"><i class="fa-solid fa-star"></i></button>') +
+            '<button class="ibtn ibtn-edit" data-edit="' + f.id + '" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>' +
+            '<button class="ibtn ibtn-del" data-del="' + f.id + '" title="ลบ"><i class="fa-solid fa-trash"></i></button>' +
+          '</div></td></tr>';
+      });
+      h += '</tbody></table></div>';
+      body.innerHTML = h;
+
+      $('#fAdd').addEventListener('click', function () { fyForm(null); });
+      $$('[data-edit]', body).forEach(function (b) {
+        b.addEventListener('click', function () { fyForm(DB.fyById(b.dataset.edit)); });
+      });
+      $$('[data-cur]', body).forEach(function (b) {
+        b.addEventListener('click', function () {
+          UI.confirmAsk('ตั้งเป็นปีงบประมาณปัจจุบัน?', '', 'ยืนยัน').then(function (yes) {
+            if (!yes) return;
+            UI.busy('กำลังบันทึก...');
+            UI.delay(400).then(function () {
+              DB.setCurrentFY(b.dataset.cur);
+              UI.idle(); UI.toast('ตั้งปีงบประมาณปัจจุบันเรียบร้อย');
+              APP.renderShell(); APP.reload();
+            });
+          });
+        });
+      });
+      $$('[data-del]', body).forEach(function (b) {
+        b.addEventListener('click', function () {
+          var used = DB.leaves().some(function (l) { return l.fyId === b.dataset.del; });
+          if (used) { UI.warn('ลบไม่ได้', 'มีรายการลาที่อ้างอิงปีงบประมาณนี้อยู่'); return; }
+          UI.confirmDel('ลบปีงบประมาณนี้?').then(function (yes) {
+            if (!yes) return;
+            UI.busy('กำลังลบข้อมูล...');
+            UI.delay(400).then(function () {
+              DB.deleteFY(b.dataset.del);
+              UI.idle(); UI.toast('ลบเรียบร้อย'); APP.renderShell(); APP.reload();
+            });
+          });
+        });
+      });
+    });
+  }
+
+  function fyForm(f) {
+    var isNew = !f;
+    f = f || {};
+    UI.modal({
+      title: isNew ? 'เพิ่มปีงบประมาณ' : 'แก้ไขปีงบประมาณ',
+      icon: 'fa-calendar-plus',
+      body: '<form id="fForm" class="space-y-4">' +
+        '<div><label class="lbl">ชื่อปีงบประมาณ <span class="req">*</span></label>' +
+          '<input name="name" class="inp" placeholder="เช่น 2570" value="' + esc(f.name || '') + '" required></div>' +
+        '<div class="rounded-2xl border border-brand-100 bg-brand-50/50 p-3">' +
+          '<p class="mb-2 text-sm font-semibold text-brand-700">รอบที่ 1</p>' +
+          '<div class="grid gap-3 sm:grid-cols-2">' +
+            '<div><label class="lbl">วันที่เริ่มต้น <span class="req">*</span></label><input type="date" name="r1Start" class="inp" value="' + esc(f.r1Start || '') + '" required></div>' +
+            '<div><label class="lbl">วันที่สิ้นสุด <span class="req">*</span></label><input type="date" name="r1End" class="inp" value="' + esc(f.r1End || '') + '" required></div>' +
+          '</div></div>' +
+        '<div class="rounded-2xl border border-brand-100 bg-brand-50/50 p-3">' +
+          '<p class="mb-2 text-sm font-semibold text-brand-700">รอบที่ 2</p>' +
+          '<div class="grid gap-3 sm:grid-cols-2">' +
+            '<div><label class="lbl">วันที่เริ่มต้น <span class="req">*</span></label><input type="date" name="r2Start" class="inp" value="' + esc(f.r2Start || '') + '" required></div>' +
+            '<div><label class="lbl">วันที่สิ้นสุด <span class="req">*</span></label><input type="date" name="r2End" class="inp" value="' + esc(f.r2End || '') + '" required></div>' +
+          '</div></div>' +
+        '<label class="flex items-center gap-2 text-sm font-medium text-slate-600">' +
+          '<input type="checkbox" name="current" class="h-4 w-4 accent-brand-600"' + (f.current ? ' checked' : '') + '> ตั้งเป็นปีงบประมาณปัจจุบัน</label>' +
+        '</form>',
+      foot: '<button class="btn-ghost" data-modal-close>ยกเลิก</button>' +
+            '<button class="btn-primary" id="fSave"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</button>',
+      onOpen: function () {
+        $('#fSave').addEventListener('click', function () {
+          var fd = new FormData($('#fForm'));
+          var d = {
+            id: f.id,
+            name: String(fd.get('name') || '').trim(),
+            r1Start: fd.get('r1Start'), r1End: fd.get('r1End'),
+            r2Start: fd.get('r2Start'), r2End: fd.get('r2End')
+          };
+          if (!d.name || !d.r1Start || !d.r1End || !d.r2Start || !d.r2End) {
+            UI.warn('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
+          }
+          if (d.r1End < d.r1Start || d.r2End < d.r2Start) {
+            UI.warn('ช่วงวันที่ไม่ถูกต้อง', 'วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น'); return;
+          }
+          var btn = $('#fSave');
+          UI.btnLoading(btn, true);
+          UI.delay(500).then(function () {
+            var saved = DB.saveFY(d);
+            if (fd.get('current')) DB.setCurrentFY(saved.id);
+            UI.btnLoading(btn, false); UI.closeModal();
+            UI.toast(isNew ? 'เพิ่มปีงบประมาณเรียบร้อย' : 'แก้ไขเรียบร้อย');
+            APP.renderShell(); APP.reload();
+          });
+        });
+      }
+    });
+  }
+
+  /* ================= รายการลาทั้งหมด ================= */
+  var _flt = { user: '', fy: '', round: '', type: '', status: '' };
+
+  function leaves(body) {
+    body.innerHTML = UI.skTable(6, 9);
+    UI.delay().then(function () {
+      var h = UI.pageHead('รายการลาทั้งหมด', 'กรองข้อมูล ดูรายละเอียด และพิมพ์ใบลา');
+      h += '<div class="card card-pad mb-4">' +
+        '<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">' +
+          '<div><label class="lbl">ชื่อ-นามสกุล</label><select id="fU" class="sel"><option value="">ทั้งหมด</option>' +
+            DB.users().map(function (u) { return '<option value="' + u.id + '"' + (_flt.user === u.id ? ' selected' : '') + '>' + esc(u.fullname) + '</option>'; }).join('') +
+          '</select></div>' +
+          '<div><label class="lbl">ปีงบประมาณ</label><select id="fF" class="sel"><option value="">ทั้งหมด</option>' +
+            DB.fiscalYears().map(function (f) { return '<option value="' + f.id + '"' + (_flt.fy === f.id ? ' selected' : '') + '>' + esc(f.name) + '</option>'; }).join('') +
+          '</select></div>' +
+          '<div><label class="lbl">รอบที่</label><select id="fR" class="sel"><option value="">ทั้งหมด</option>' +
+            '<option value="1"' + (_flt.round === '1' ? ' selected' : '') + '>รอบที่ 1</option>' +
+            '<option value="2"' + (_flt.round === '2' ? ' selected' : '') + '>รอบที่ 2</option></select></div>' +
+          '<div><label class="lbl">ประเภท</label><select id="fT" class="sel"><option value="">ทั้งหมด</option>' +
+            DB.LEAVE_TYPES.map(function (t) { return '<option value="' + t.id + '"' + (_flt.type === t.id ? ' selected' : '') + '>' + esc(t.name) + '</option>'; }).join('') +
+          '</select></div>' +
+          '<div><label class="lbl">สถานะ</label><select id="fS" class="sel"><option value="">ทั้งหมด</option>' +
+            '<option value="pending"' + (_flt.status === 'pending' ? ' selected' : '') + '>รออนุญาต</option>' +
+            '<option value="approved"' + (_flt.status === 'approved' ? ' selected' : '') + '>อนุญาต</option>' +
+            '<option value="rejected"' + (_flt.status === 'rejected' ? ' selected' : '') + '>ไม่อนุญาต</option></select></div>' +
+        '</div></div>';
+      h += '<div id="lvTbl"></div>';
+      body.innerHTML = h;
+
+      ['fU', 'fF', 'fR', 'fT', 'fS'].forEach(function (id) {
+        $('#' + id).addEventListener('change', function () {
+          _flt = { user: $('#fU').value, fy: $('#fF').value, round: $('#fR').value, type: $('#fT').value, status: $('#fS').value };
+          drawLeaves();
+        });
+      });
+      drawLeaves();
+    });
+  }
+
+  function drawLeaves() {
+    var box = $('#lvTbl');
+    box.innerHTML = UI.skTable(5, 9);
+    UI.delay(350).then(function () {
+      var list = DB.leaves().filter(function (l) {
+        if (_flt.user && l.userId !== _flt.user) return false;
+        if (_flt.fy && l.fyId !== _flt.fy) return false;
+        if (_flt.round && String(l.round) !== _flt.round) return false;
+        if (_flt.type && l.leaveType !== _flt.type) return false;
+        if (_flt.status && (l.status || 'pending') !== _flt.status) return false;
+        return true;
+      }).sort(function (a, b) { return String(b.startDate).localeCompare(String(a.startDate)); });
+
+      var h = '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+        '<th style="width:60px">ลำดับ</th><th>ชื่อ-นามสกุล</th><th>ตำแหน่ง</th><th>รอบที่/ปีงบประมาณ</th>' +
+        '<th>ประเภท</th><th>วันที่ลา</th><th>วัน</th><th>สถานะ</th><th style="width:130px">จัดการ</th>' +
+        '</tr></thead><tbody>';
+      if (!list.length) h += UI.emptyRow(9);
+      list.forEach(function (l, i) {
+        h += '<tr><td class="td-c">' + (i + 1) + '</td>' +
+          '<td>' + esc(l.applicantName) + '</td>' +
+          '<td>' + esc(l.applicantPosition || '-') + '</td>' +
+          '<td class="td-c">' + esc(l.round) + '/' + esc(l.fyName) + '</td>' +
+          '<td class="td-c">' + UI.typeBadge(l.leaveType) + '</td>' +
+          '<td class="td-c">' + esc(UI.rangeText(l.startDate, l.endDate)) + '</td>' +
+          '<td class="td-c">' + esc(l.days) + '</td>' +
+          '<td class="td-c">' + UI.statusBadge(l.status) + '</td>' +
+          '<td class="td-c"><div class="flex justify-center gap-1.5">' +
+            '<button class="ibtn ibtn-view" data-view="' + l.id + '" title="ดูรายละเอียด"><i class="fa-solid fa-eye"></i></button>' +
+            '<button class="ibtn ibtn-print" data-print="' + l.id + '" title="พิมพ์ใบลา"><i class="fa-solid fa-print"></i></button>' +
+            '<button class="ibtn ibtn-del" data-del="' + l.id + '" title="ลบ"><i class="fa-solid fa-trash"></i></button>' +
+          '</div></td></tr>';
+      });
+      h += '</tbody></table></div>';
+      box.innerHTML = h;
+
+      $$('[data-view]', box).forEach(function (b) {
+        b.addEventListener('click', function () { PRINT.preview(b.dataset.view); });
+      });
+      $$('[data-print]', box).forEach(function (b) {
+        b.addEventListener('click', function () { PRINT.leave(b.dataset.print); });
+      });
+      $$('[data-del]', box).forEach(function (b) {
+        b.addEventListener('click', function () {
+          UI.confirmDel('ลบรายการลานี้?').then(function (yes) {
+            if (!yes) return;
+            UI.busy('กำลังลบข้อมูล...');
+            UI.delay(400).then(function () {
+              DB.deleteLeave(b.dataset.del);
+              UI.idle(); UI.toast('ลบรายการลาเรียบร้อย'); drawLeaves();
+            });
+          });
+        });
+      });
+    });
+  }
+
+  /* ================= สรุปสถิติการลา ================= */
+  function stats(body) {
+    var cur = DB.currentFY();
+    body.innerHTML = UI.pageHead('สรุปสถิติการลา', 'เลือกปีงบประมาณแล้วกดโหลดข้อมูล') +
+      '<div class="card card-pad mb-4"><div class="flex flex-wrap items-end gap-3">' +
+        '<div class="min-w-[200px] flex-1"><label class="lbl">ปีงบประมาณ <span class="req">*</span></label>' +
+          '<select id="sFy" class="sel">' + DB.fiscalYears().map(function (f) {
+            return '<option value="' + f.id + '"' + (cur && cur.id === f.id ? ' selected' : '') + '>' + esc(f.name) + '</option>';
+          }).join('') + '</select></div>' +
+        '<button class="btn-primary" id="sLoad"><i class="fa-solid fa-rotate"></i> โหลดข้อมูล</button>' +
+      '</div></div>' +
+      '<div id="sBox" class="card card-pad text-center text-sm text-slate-400">' +
+        '<i class="fa-regular fa-chart-bar mb-2 block text-3xl"></i>กรุณาเลือกปีงบประมาณและกดปุ่มโหลดข้อมูล</div>';
+
+    $('#sLoad').addEventListener('click', function () {
+      var fyId = $('#sFy').value;
+      if (!fyId) { UI.warn('ยังไม่เลือกปีงบประมาณ'); return; }
+      var box = $('#sBox');
+      box.className = '';
+      box.innerHTML = UI.skTable(6, 9);
+      UI.delay(600).then(function () { box.innerHTML = statTable(fyId); });
+    });
+  }
+
+  function statTable(fyId) {
+    var f = DB.fyById(fyId);
+    var list = DB.users().filter(function (u) { return u.role !== 'admin'; });
+    var SHORT = { sick: 'ป่วย', personal: 'กิจ', maternity: 'ลาคลอด', vacation: 'พักผ่อน' };
+    var keys = DB.LEAVE_TYPES.map(function (t) { return t.id; });
+    var tot = { all: { t: 0, d: 0 } };
+    keys.forEach(function (k) { tot[k] = { t: 0, d: 0 }; });
+    var cols = keys.length + 1;   /* + คอลัมน์รวม */
+
+    var h = '<div class="tbl-wrap"><table class="tbl tbl-stat"><thead>' +
+      '<tr><th rowspan="2" style="width:60px">ลำดับ</th><th rowspan="2">ชื่อ-นามสกุล</th>' +
+      keys.map(function (k) { return '<th colspan="2">' + esc(SHORT[k] || UI.typeName(k)) + '</th>'; }).join('') +
+      '<th colspan="2">รวม</th></tr><tr>' +
+      new Array(cols + 1).join('<th>ครั้ง</th><th>วัน</th>') +
+      '</tr></thead><tbody>';
+
+    if (!list.length) h += UI.emptyRow(2 + cols * 2);
+    list.forEach(function (u, i) {
+      var s = DB.summaryOf(u.id, fyId), at = 0, ad = 0;
+      h += '<tr><td>' + (i + 1) + '</td><td>' + esc(u.fullname) + '</td>';
+      keys.forEach(function (k) {
+        tot[k].t += s[k].times; tot[k].d += s[k].days;
+        at += s[k].times; ad += s[k].days;
+        h += '<td>' + s[k].times + '</td><td>' + s[k].days + '</td>';
+      });
+      tot.all.t += at; tot.all.d += ad;
+      h += '<td class="font-semibold">' + at + '</td><td class="font-semibold">' + ad + '</td></tr>';
+    });
+    h += '</tbody><tfoot><tr><td colspan="2" class="td-c">รวมทั้งหมด</td>' +
+      keys.map(function (k) {
+        return '<td class="td-c">' + tot[k].t + '</td><td class="td-c">' + tot[k].d + '</td>';
+      }).join('') +
+      '<td class="td-c">' + tot.all.t + '</td><td class="td-c">' + tot.all.d + '</td></tr></tfoot></table></div>' +
+      '<p class="mt-2 text-xs text-slate-400">ปีงบประมาณ ' + esc(f ? f.name : '-') + ' · นับรายการที่ไม่ถูกปฏิเสธ</p>';
+    return h;
+  }
+
+  return { MENU: MENU, render: render };
+})();
+
+</script>
+<script>
+/* ---------- assets/js/chief.js ---------- */
+/* ============================================================
+   chief.js — หน้าสำหรับสาธารณสุขอำเภอ
+   แดชบอร์ด / แก้ไขข้อมูลส่วนตัว / รายการขออนุญาตลา (พิจารณาอนุญาต)
+   ============================================================ */
+var CHIEF = (function () {
+  var $ = UI.$, $$ = UI.$$, esc = UI.esc;
+
+  var MENU = [
+    { id: 'dash',     icon: 'fa-gauge-high',  label: 'แดชบอร์ด',          title: 'แดชบอร์ด',           sub: 'ภาพรวมการขออนุญาตลา' },
+    { id: 'profile',  icon: 'fa-user-pen',    label: 'แก้ไขข้อมูลส่วนตัว', title: 'แก้ไขข้อมูลส่วนตัว',  sub: 'บัญชีผู้ใช้ รูปโปรไฟล์ และลายเซ็น' },
+    { id: 'requests', icon: 'fa-stamp',       label: 'รายการขออนุญาตลา',   title: 'รายการขออนุญาตลา',   sub: 'พิจารณาอนุญาตการลาของเจ้าหน้าที่' }
+  ];
+
+  function render(page, body) {
+    if (page === 'dash')     return dash(body);
+    if (page === 'profile')  return STAFF.profile(body);   /* ใช้ฟอร์มเดียวกับเจ้าหน้าที่ */
+    if (page === 'requests') return requests(body);
+  }
+
+  /* ================= แดชบอร์ด ================= */
+  function dash(body) {
+    body.innerHTML = UI.skCards(4);
+    UI.delay().then(function () {
+      var f = DB.currentFY();
+      var all = DB.leaves().filter(function (l) { return !f || l.fyId === f.id; });
+      var wait = all.filter(function (l) { return (l.status || 'pending') === 'pending'; });
+      var ok = all.filter(function (l) { return l.status === 'approved'; }).length;
+      var no = all.filter(function (l) { return l.status === 'rejected'; }).length;
+
+      var h = UI.pageHead('ภาพรวมการขออนุญาตลา', 'ปีงบประมาณ ' + (f ? f.name : '-'));
+      h += '<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">' +
+        UI.stat('fa-clock', '#F57C00', 'รออนุญาต', wait.length, 'รายการ') +
+        UI.stat('fa-circle-check', '#26A69A', 'อนุญาตแล้ว', ok, 'รายการ') +
+        UI.stat('fa-circle-xmark', '#EF5350', 'ไม่อนุญาต', no, 'รายการ') +
+        UI.stat('fa-users', '#DB2777', 'เจ้าหน้าที่', DB.usersByRole('staff').length, 'คน') +
+        '</div>';
+
+      h += '<div class="mt-6 card card-pad">' +
+        '<p class="mb-3 font-bold text-slate-800"><i class="fa-regular fa-clock text-brand-600"></i> รายการที่รอพิจารณา</p>' +
+        '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+        '<th>ชื่อเจ้าหน้าที่</th><th>ประเภท</th><th>วันที่ลา</th><th>วัน</th><th style="width:90px">จัดการ</th>' +
+        '</tr></thead><tbody>';
+      if (!wait.length) h += UI.emptyRow(5, 'ไม่มีรายการรอพิจารณา');
+      wait.slice(0, 8).forEach(function (l) {
+        h += '<tr><td>' + esc(l.applicantName) + '</td>' +
+          '<td class="td-c">' + UI.typeBadge(l.leaveType) + '</td>' +
+          '<td class="td-c">' + esc(UI.rangeText(l.startDate, l.endDate)) + '</td>' +
+          '<td class="td-c">' + esc(l.days) + '</td>' +
+          '<td class="td-c"><button class="ibtn ibtn-ok" data-go="' + l.id + '" title="พิจารณา">' +
+          '<i class="fa-solid fa-stamp"></i></button></td></tr>';
+      });
+      h += '</tbody></table></div></div>';
+      body.innerHTML = h;
+
+      $$('[data-go]', body).forEach(function (b) {
+        b.addEventListener('click', function () { APP.go('requests'); });
+      });
+    });
+  }
+
+  /* ================= รายการขออนุญาตลา ================= */
+  var _st = '';
+
+  function requests(body) {
+    body.innerHTML = UI.skTable(6, 7);
+    UI.delay().then(function () {
+      body.innerHTML = UI.pageHead('รายการขออนุญาตลา', 'พิจารณาอนุญาตการลาของเจ้าหน้าที่') +
+        '<div class="card card-pad mb-4"><div class="max-w-xs">' +
+          '<label class="lbl">กรองตามสถานะ</label><select id="cSt" class="sel">' +
+          '<option value="">ทั้งหมด</option>' +
+          '<option value="pending"' + (_st === 'pending' ? ' selected' : '') + '>รออนุญาต</option>' +
+          '<option value="approved"' + (_st === 'approved' ? ' selected' : '') + '>อนุญาต</option>' +
+          '<option value="rejected"' + (_st === 'rejected' ? ' selected' : '') + '>ไม่อนุญาต</option>' +
+        '</select></div></div><div id="cBox"></div>';
+      $('#cSt').addEventListener('change', function () { _st = $('#cSt').value; draw(); });
+      draw();
+    });
+  }
+
+  function draw() {
+    var box = $('#cBox');
+    box.innerHTML = UI.skTable(5, 7);
+    UI.delay(350).then(function () {
+      var list = DB.leaves().filter(function (l) {
+        return !_st || (l.status || 'pending') === _st;
+      }).sort(function (a, b) { return String(b.startDate).localeCompare(String(a.startDate)); });
+
+      var h = '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+        '<th style="width:60px">ลำดับ</th><th>ชื่อเจ้าหน้าที่</th><th>รอบที่/ปีงบประมาณ</th><th>ประเภทการลา</th>' +
+        '<th>กำหนดวัน</th><th>สถานะ</th><th style="width:130px">จัดการ</th></tr></thead><tbody>';
+      if (!list.length) h += UI.emptyRow(7, 'ไม่พบรายการ');
+      list.forEach(function (l, i) {
+        h += '<tr><td class="td-c">' + (i + 1) + '</td>' +
+          '<td>' + esc(l.applicantName) + '<div class="text-[11px] text-slate-400">' + esc(l.applicantPosition || '-') + '</div></td>' +
+          '<td class="td-c">' + esc(l.round) + '/' + esc(l.fyName) + '</td>' +
+          '<td class="td-c">' + UI.typeBadge(l.leaveType) + '</td>' +
+          '<td class="td-c">' + esc(UI.rangeText(l.startDate, l.endDate)) + ' <span class="text-slate-400">(' + esc(l.days) + ' วัน)</span></td>' +
+          '<td class="td-c">' + UI.statusBadge(l.status) + '</td>' +
+          '<td class="td-c"><div class="flex justify-center gap-1.5">' +
+            '<button class="ibtn ibtn-view" data-view="' + l.id + '" title="ดูใบลา"><i class="fa-solid fa-eye"></i></button>' +
+            '<button class="ibtn ibtn-print" data-print="' + l.id + '" title="พิมพ์ใบลา"><i class="fa-solid fa-print"></i></button>' +
+            '<button class="ibtn ibtn-ok" data-ap="' + l.id + '" title="พิจารณาอนุญาต"><i class="fa-solid fa-stamp"></i></button>' +
+          '</div></td></tr>';
+      });
+      h += '</tbody></table></div>';
+      box.innerHTML = h;
+
+      $$('[data-view]', box).forEach(function (b) {
+        b.addEventListener('click', function () { PRINT.preview(b.dataset.view); });
+      });
+      $$('[data-print]', box).forEach(function (b) {
+        b.addEventListener('click', function () { PRINT.leave(b.dataset.print); });
+      });
+      $$('[data-ap]', box).forEach(function (b) {
+        b.addEventListener('click', function () { approveForm(DB.leaveById(b.dataset.ap)); });
+      });
+    });
+  }
+
+  /* ================= modal พิจารณาอนุญาต ================= */
+  function approveForm(l) {
+    if (!l) { UI.err('ไม่พบข้อมูลใบลา'); return; }
+    var me = APP.user();
+    /* ลาพักผ่อน : สาธารณสุขอำเภอให้ "ความเห็น" เท่านั้น คำสั่งเป็นของนายอำเภอ */
+    var isVac = l.leaveType === 'vacation';
+
+    UI.modal({
+      title: isVac ? 'ให้ความเห็นการลาพักผ่อน' : 'พิจารณาอนุญาตการลา',
+      sub: l.applicantName + ' · ' + UI.typeName(l.leaveType) + ' · ' + UI.rangeText(l.startDate, l.endDate),
+      icon: 'fa-stamp', size: 'max-w-2xl',
+      body: '<form id="apForm" class="space-y-4">' +
+        '<div class="rounded-2xl border border-brand-100 bg-brand-50/50 p-3 text-sm leading-7">' +
+          '<div><b>เรื่อง:</b> ' + esc(l.subject) + '</div>' +
+          '<div><b>เนื่องจาก:</b> ' + esc(l.reason) + '</div>' +
+          '<div><b>มีกำหนด:</b> ' + esc(l.days) + ' วัน</div>' +
+          '<div><b>ติดต่อได้ที่:</b> ' + esc(l.contact) + '</div>' +
+        '</div>' +
+        '<div><label class="lbl">ความคิดเห็นผู้บังคับบัญชา <span class="req">*</span></label>' +
+          '<textarea name="comment" class="txa" placeholder="เช่น เห็นควรอนุญาต">' + esc(l.chiefComment || '') + '</textarea></div>' +
+        '<div><label class="lbl">' + (isVac ? 'ความเห็น' : 'คำสั่ง') + ' <span class="req">*</span></label>' +
+          '<div class="flex flex-wrap gap-2">' +
+            '<label class="btn-ghost cursor-pointer"><input type="radio" name="decision" value="approved" class="accent-brand-600" ' +
+              (l.status === 'approved' ? 'checked' : '') + '> ' + (isVac ? 'เห็นควรอนุญาต' : 'อนุญาต') + '</label>' +
+            '<label class="btn-ghost cursor-pointer"><input type="radio" name="decision" value="rejected" class="accent-brand-600" ' +
+              (l.status === 'rejected' ? 'checked' : '') + '> ' + (isVac ? 'ไม่เห็นควรอนุญาต' : 'ไม่อนุญาต') + '</label>' +
+          '</div></div>' +
+        (isVac ? '<div class="rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-warn2">' +
+          '<i class="fa-solid fa-circle-info"></i> ช่อง "คำสั่ง" ในใบลาพักผ่อนจะเว้นว่างไว้ให้นายอำเภอ' +
+          esc(DB.settings().district || 'กู่แก้ว') + 'ลงนามด้วยปากกาบนเอกสารที่พิมพ์ออกมา</div>' : '') +
+        UI.signatureBlockHTML('sigChief', me.signature || '', 'ลงชื่อสาธารณสุขอำเภอกู่แก้ว') +
+        '<div class="rounded-xl bg-slate-50 px-4 py-2.5 text-center text-sm">' +
+          '<div class="font-semibold text-slate-700">( ' + esc(me.fullname) + ' )</div>' +
+          '<div class="text-xs text-slate-500">' + esc(me.position || 'สาธารณสุขอำเภอกู่แก้ว') + '</div>' +
+        '</div>' +
+        '</form>',
+      foot: '<button class="btn-ghost" data-modal-close>ยกเลิก</button>' +
+            '<button class="btn-primary" id="apSave"><i class="fa-solid fa-floppy-disk"></i> บันทึกอนุญาตลา</button>',
+      onOpen: function () {
+        var sig = UI.initSignatureBlock('sigChief', me.signature || '');
+        $('#apSave').addEventListener('click', function () {
+          var fd = new FormData($('#apForm'));
+          var comment = String(fd.get('comment') || '').trim();
+          var dec = fd.get('decision');
+          if (!comment) { UI.warn('ข้อมูลไม่ครบ', 'กรุณากรอกความคิดเห็น'); return; }
+          if (!dec) {
+            UI.warn('ข้อมูลไม่ครบ', isVac ? 'กรุณาเลือกความเห็น เห็นควรอนุญาต หรือ ไม่เห็นควรอนุญาต'
+                                          : 'กรุณาเลือกคำสั่ง อนุญาต หรือ ไม่อนุญาต'); return;
+          }
+          var sg = sig.get();
+          if (!sg) { UI.warn('ยังไม่ได้ลงลายเซ็น', 'กรุณาเลือกลายเซ็นสแกน หรือเซ็นสดในกรอบ'); return; }
+
+          UI.confirmAsk('ยืนยันการบันทึก?',
+            (isVac ? 'ความเห็น: <b>' + (dec === 'approved' ? 'เห็นควรอนุญาต' : 'ไม่เห็นควรอนุญาต') + '</b>' +
+                     '<br><span class="text-xs text-slate-500">คำสั่งอนุญาตเป็นอำนาจของนายอำเภอ</span>'
+                   : 'คำสั่ง: <b>' + (dec === 'approved' ? 'อนุญาต' : 'ไม่อนุญาต') + '</b>'), 'ยืนยัน')
+            .then(function (yes) {
+              if (!yes) return;
+              var btn = $('#apSave');
+              UI.btnLoading(btn, true);
+              UI.delay(600).then(function () {
+                /* เก็บ snapshot ชื่อ/ตำแหน่ง/ลายเซ็น ณ วันที่พิจารณา */
+                DB.saveLeave({
+                  id: l.id,
+                  status: dec,
+                  chiefComment: comment,
+                  chiefName: me.fullname,
+                  chiefPosition: me.position || 'สาธารณสุขอำเภอกู่แก้ว',
+                  chiefSignature: sg,
+                  chiefDecidedAt: new Date().toISOString()
+                });
+                UI.btnLoading(btn, false);
+                UI.closeModal();
+                UI.ok('บันทึกสำเร็จ', dec === 'approved' ? 'อนุญาตการลาเรียบร้อย' : 'บันทึกไม่อนุญาตเรียบร้อย');
+                draw();
+              });
+            });
+        });
+      }
+    });
+  }
+
+  return { MENU: MENU, render: render };
+})();
+
+</script>
+<script>
+/* ---------- assets/js/staff.js ---------- */
+/* ============================================================
+   staff.js — หน้าสำหรับเจ้าหน้าที่ (+ ฟอร์มแก้ไขข้อมูลส่วนตัวที่ใช้ร่วมกัน)
+   ============================================================ */
+var STAFF = (function () {
+  var $ = UI.$, $$ = UI.$$, esc = UI.esc;
+  var _editId = null;   /* ใบลาที่กำลังแก้ไข */
+
+  var MENU = [
+    { id: 'dash',    icon: 'fa-gauge-high',    label: 'แดชบอร์ด',          title: 'แดชบอร์ด',            sub: 'สรุปการลาของท่าน' },
+    { id: 'profile', icon: 'fa-user-pen',      label: 'แก้ไขข้อมูลส่วนตัว', title: 'แก้ไขข้อมูลส่วนตัว',   sub: 'บัญชีผู้ใช้ รูปโปรไฟล์ และลายเซ็น' },
+    { id: 'request', icon: 'fa-file-pen',      label: 'ขออนุญาตลา',        title: 'แบบใบลา',             sub: 'ลาป่วย / ลากิจส่วนตัว / ลาคลอดบุตร' },
+    { id: 'vacation',icon: 'fa-umbrella-beach',label: 'ขอลาพักผ่อน',       title: 'แบบใบลาพักผ่อน',       sub: 'ยื่นขอลาพักผ่อนประจำปี' },
+    { id: 'mine',    icon: 'fa-folder-open',   label: 'ข้อมูลขออนุญาตลา',   title: 'ข้อมูลขออนุญาตลา',    sub: 'ดูรายละเอียด แก้ไข ลบ และพิมพ์ใบลา' }
+  ];
+
+  function render(page, body) {
+    if (page === 'dash')    return dash(body);
+    if (page === 'profile') return profile(body);
+    if (page === 'request')  return request(body);
+    if (page === 'vacation') return vacation(body);
+    if (page === 'mine')    return mine(body);
+  }
+
+  /* ================= แดชบอร์ด ================= */
+  function dash(body) {
+    body.innerHTML = UI.skCards(4);
+    UI.delay().then(function () {
+      var me = APP.user(), f = DB.currentFY();
+      var s = DB.summaryOf(me.id, f ? f.id : '');
+      var my = DB.leavesByUser(me.id);
+      var wait = my.filter(function (l) { return (l.status || 'pending') === 'pending'; }).length;
+
+      body.innerHTML = UI.pageHead('สวัสดี ' + me.fullname, 'ปีงบประมาณ ' + (f ? f.name : '-')) +
+        '<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">' +
+          UI.stat('fa-virus', '#EF5350', 'ลาป่วย', s.sick.days, 'วัน') +
+          UI.stat('fa-briefcase', '#0288D1', 'ลากิจส่วนตัว', s.personal.days, 'วัน') +
+          UI.stat('fa-baby', '#DB2777', 'ลาคลอดบุตร', s.maternity.days, 'วัน') +
+          UI.stat('fa-umbrella-beach', '#26A69A', 'ลาพักผ่อน', s.vacation.days, 'วัน') +
+          UI.stat('fa-clock', '#F57C00', 'รออนุญาต', wait, 'รายการ') +
+        '</div>' +
+        '<div class="mt-4 card card-pad">' +
+          '<p class="mb-1 font-bold text-slate-800"><i class="fa-solid fa-umbrella-beach text-brand-600"></i> สิทธิลาพักผ่อนคงเหลือ</p>' +
+          (function () {
+            var v = DB.vacationInfo(me.id, f ? f.id : '');
+            return '<p class="text-sm text-slate-600">สะสมยกมา <b>' + v.carry + '</b> วัน · ' +
+              'สิทธิประจำปีคงเหลือ <b>' + v.remain + '</b> วันทำการ · ' +
+              'รวมลาได้อีก <b class="text-brand-700">' + v.total + '</b> วันทำการ</p>';
+          })() +
+        '</div>' +
+        '<div class="mt-6 card card-pad">' +
+          '<p class="mb-3 font-bold text-slate-800"><i class="fa-regular fa-rectangle-list text-brand-600"></i> สถิติการลาปีงบประมาณนี้</p>' +
+          statTableHTML(s, null) + '</div>';
+    });
+  }
+
+  function statTableHTML(before, now) {
+    var h = '<div class="tbl-wrap"><table class="tbl" style="min-width:520px"><thead><tr>' +
+      '<th>ประเภทการลา</th><th>ลามาแล้ว (วัน)</th><th>ลาครั้งนี้ (วัน)</th><th>รวมเป็น (วัน)</th>' +
+      '</tr></thead><tbody>';
+    DB.LEAVE_TYPES.forEach(function (t) {
+      var b = Number((before[t.id] || {}).days || 0);
+      var n = (now && now.type === t.id) ? Number(now.days || 0) : 0;
+      h += '<tr><td>' + UI.typeBadge(t.id) + '</td><td class="td-c">' + b + '</td>' +
+        '<td class="td-c">' + (n || '-') + '</td><td class="td-c font-semibold">' + (b + n) + '</td></tr>';
+    });
+    return h + '</tbody></table></div>';
+  }
+
+  /** รายชื่อผู้ใช้อื่นสำหรับ dropdown (ยกเว้นตัวเอง) */
+  function peopleOpts(selId) {
+    var me = APP.user();
+    return '<option value="">— เลือก —</option>' +
+      DB.users().filter(function (u) { return u.id !== me.id; }).map(function (u) {
+        return '<option value="' + u.id + '"' + (selId === u.id ? ' selected' : '') + '>' +
+          esc(u.fullname) + (u.position ? ' (' + esc(u.position) + ')' : '') + '</option>';
+      }).join('');
+  }
+
+  /** แสดงชื่อ/ตำแหน่ง/สถานะลายเซ็นของคนที่เลือกใน dropdown */
+  function bindPersonInfo(selectId, boxId) {
+    function paint() {
+      var u = DB.userById($('#' + selectId).value);
+      $('#' + boxId).innerHTML = u
+        ? '<span class="badge badge-brand"><i class="fa-regular fa-user"></i> ' + esc(u.fullname) + '</span> ' +
+          '<span class="text-slate-500">ตำแหน่ง ' + esc(u.position || '-') + '</span>' +
+          (u.signature ? ' <span class="badge badge-ok"><i class="fa-solid fa-signature"></i> มีลายเซ็นสแกน</span>'
+                       : ' <span class="badge badge-wait">ยังไม่มีลายเซ็นสแกน</span>')
+        : '';
+    }
+    $('#' + selectId).addEventListener('change', paint);
+    paint();
+  }
+
+  /** บรรทัดสรุปสิทธิลาพักผ่อนปัจจุบัน (แสดงใต้ช่องกรอกในหน้าโปรไฟล์) */
+  function vacationSummary(u) {
+    var fy = DB.currentFY();
+    var v = DB.vacationInfo(u.id, fy ? fy.id : '');
+    return 'ปีงบประมาณ ' + esc(fy ? fy.name : '-') +
+      ' · ใช้ไปแล้ว <b>' + v.used + '</b> วัน' +
+      ' · คงเหลือลาได้อีก <b class="text-brand-700">' + v.total + '</b> วันทำการ' +
+      ' (สะสมยกมา ' + v.carry + ' + สิทธิประจำปีคงเหลือ ' + v.remain + ')';
+  }
+
+  /* ================= แก้ไขข้อมูลส่วนตัว (ใช้ร่วมกับสาธารณสุขอำเภอ) ================= */
+  function profile(body) {
+    body.innerHTML = UI.skForm();
+    UI.delay().then(function () {
+      var u = APP.user();
+      body.innerHTML = UI.pageHead('แก้ไขข้อมูลส่วนตัว', 'ข้อมูลนี้จะถูกนำไปใช้ในใบลา') +
+        '<form id="pForm" class="card card-pad max-w-3xl space-y-4" autocomplete="off">' +
+          '<div class="grid gap-4 sm:grid-cols-2">' +
+            '<div><label class="lbl">ชื่อผู้ใช้ (Username) <span class="req">*</span></label>' +
+              '<input name="username" class="inp" value="' + esc(u.username) + '" required></div>' +
+            '<div><label class="lbl">รหัสผ่าน (Password) <span class="req">*</span></label>' +
+              '<div class="relative"><input name="password" type="password" class="inp pr-10" value="' + esc(u.password) + '" required>' +
+              '<button type="button" class="pw-toggle" id="pPw"><i class="fa-regular fa-eye"></i></button></div></div>' +
+          '</div>' +
+          '<div class="grid gap-4 sm:grid-cols-2">' +
+            '<div><label class="lbl">ชื่อ-นามสกุล <span class="req">*</span></label>' +
+              '<input name="fullname" class="inp" value="' + esc(u.fullname) + '" required></div>' +
+            '<div><label class="lbl">ตำแหน่ง <span class="req">*</span></label>' +
+              '<input name="position" class="inp" value="' + esc(u.position || '') + '" placeholder="กรอกตำแหน่ง" required></div>' +
+          '</div>' +
+
+          '<div class="rounded-2xl border border-brand-100 bg-brand-50/40 p-4">' +
+            '<p class="mb-3 text-sm font-semibold text-brand-700">' +
+              '<i class="fa-solid fa-umbrella-beach"></i> สิทธิลาพักผ่อน</p>' +
+            '<div class="grid gap-3 sm:grid-cols-2">' +
+              '<div><label class="lbl">วันลาพักผ่อนสะสมยกมา (วันทำการ)</label>' +
+                '<input class="inp" value="' + esc(u.vacationCarry == null ? 0 : u.vacationCarry) + '" readonly></div>' +
+              '<div><label class="lbl">สิทธิลาพักผ่อนประจำปี (วันทำการ)</label>' +
+                '<input class="inp" value="' + esc(u.vacationQuota == null ? DB.VACATION_QUOTA : u.vacationQuota) + '" readonly></div>' +
+            '</div>' +
+            '<p class="mt-2 text-xs text-slate-500">' + vacationSummary(u) + '</p>' +
+            '<p class="mt-1.5 text-xs text-warn2"><i class="fa-solid fa-circle-info"></i> ' +
+              'สองช่องนี้แก้ไขได้เฉพาะผู้ดูแลระบบ ที่เมนูจัดการผู้ใช้งาน</p>' +
+          '</div>' +
+
+          '<div class="grid gap-4 sm:grid-cols-2">' +
+            '<div><label class="lbl">รูปภาพโปรไฟล์</label>' +
+              '<div class="flex items-center gap-3">' +
+                '<img id="pAvPrev" class="up-prev" src="' + UI.avatarOf(u) + '" alt="โปรไฟล์">' +
+                '<input type="file" id="pAvatar" accept="image/*" class="inp">' +
+              '</div><p class="mt-1 text-xs text-slate-400">ไม่บังคับ</p></div>' +
+            '<div><label class="lbl">รูปภาพลายเซ็น (สแกน)</label>' +
+              '<div class="flex items-center gap-3">' +
+                '<img id="pSigPrev" class="up-prev-wide ' + (u.signature ? '' : 'hidden') + '" src="' + (u.signature || '') + '" alt="ลายเซ็น">' +
+                '<input type="file" id="pSig" accept="image/*" class="inp">' +
+              '</div><p class="mt-1 text-xs text-slate-400">ไม่บังคับ · ใช้เลือกเป็น "ลายเซ็นสแกน" ในใบลา</p></div>' +
+          '</div>' +
+          '<div class="flex justify-end pt-2">' +
+            '<button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</button></div>' +
+        '</form>';
+
+      UI.bindUpload($('#pAvatar'), $('#pAvPrev'), 400, 400);
+      UI.bindUpload($('#pSig'), $('#pSigPrev'), 600, 300);
+      $('#pPw').addEventListener('click', function () {
+        var inp = $('#pForm').querySelector('[name=password]');
+        var show = inp.type === 'password';
+        inp.type = show ? 'text' : 'password';
+        $('#pPw').innerHTML = '<i class="fa-regular ' + (show ? 'fa-eye-slash' : 'fa-eye') + '"></i>';
+      });
+
+      $('#pForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(e.target);
+        var d = {
+          id: u.id,
+          username: String(fd.get('username') || '').trim(),
+          password: String(fd.get('password') || ''),
+          fullname: String(fd.get('fullname') || '').trim(),
+          position: String(fd.get('position') || '').trim()
+          /* ไม่รวม vacationCarry / vacationQuota : แก้ได้เฉพาะผู้ดูแลระบบ */
+        };
+        if (!d.username || !d.password || !d.fullname || !d.position) {
+          UI.warn('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบถ้วน'); return;
+        }
+        if (DB.usernameTaken(d.username, u.id)) { UI.warn('ชื่อผู้ใช้ซ้ำ', 'มีผู้ใช้ชื่อนี้ในระบบแล้ว'); return; }
+        if ($('#pAvatar').dataset.value) d.avatar = $('#pAvatar').dataset.value;
+        if ($('#pSig').dataset.value) d.signature = $('#pSig').dataset.value;
+
+        var btn = e.target.querySelector('button[type=submit]');
+        UI.btnLoading(btn, true);
+        UI.delay(500).then(function () {
+          DB.saveUser(d);
+          UI.btnLoading(btn, false);
+          APP.refreshUser();
+          UI.ok('บันทึกสำเร็จ', 'อัปเดตข้อมูลส่วนตัวเรียบร้อย');
+          APP.reload();
+        });
+      });
+    });
+  }
+
+  /* ================= ขออนุญาตลา ================= */
+  function request(body) {
+    body.innerHTML = UI.skForm();
+    UI.delay().then(function () {
+      var me = APP.user(), st = DB.settings(), fy = DB.currentFY();
+      var ed = _editId ? DB.leaveById(_editId) : null;
+      if (ed && ed.leaveType === 'vacation') { ed = null; _editId = null; }
+      else if (ed && ed.status !== 'pending') {
+        UI.warn('แก้ไขไม่ได้', 'ใบลานี้ได้รับการพิจารณาแล้ว');
+        ed = null; _editId = null;
+      }
+      var formTypeIds = DB.FORM_TYPES.map(function (t) { return t.id; });
+      var last = DB.lastLeaveOf(me.id, _editId || null, formTypeIds);
+
+      var typeRadio = DB.FORM_TYPES.map(function (t) {
+        return '<label class="btn-ghost cursor-pointer"><input type="radio" name="leaveType" value="' + t.id +
+          '" class="accent-brand-600" ' + (ed && ed.leaveType === t.id ? 'checked' : '') + '> ' + esc(t.name) + '</label>';
+      }).join('');
+
+      var lastCb = DB.FORM_TYPES.map(function (t) {
+        var on = last ? last.leaveType === t.id : false;
+        return '<label class="inline-flex items-center gap-1.5 text-sm text-slate-600">' +
+          '<input type="checkbox" class="h-4 w-4 accent-brand-600" disabled ' + (on ? 'checked' : '') + '> ' + esc(t.name) + '</label>';
+      }).join('');
+
+      var h = UI.pageHead(ed ? 'แก้ไขแบบใบลา' : 'แบบใบลาป่วย ลากิจส่วนตัว ลาคลอดบุตร',
+        'ปีงบประมาณปัจจุบัน ' + (fy ? fy.name : '-'),
+        ed ? '<button class="btn-ghost" id="lvCancel"><i class="fa-solid fa-xmark"></i> ยกเลิกการแก้ไข</button>' : '');
+
+      h += '<form id="lvForm" class="sheet max-w-4xl space-y-4">' +
+        '<div class="grid gap-4 sm:grid-cols-2">' +
+          '<div><label class="lbl">เขียนที่</label><input class="inp" value="' + esc(ed ? ed.writtenAt : st.officeName) + '" readonly></div>' +
+          '<div><label class="lbl">วันที่ <span class="req">*</span></label>' +
+            '<input type="date" name="docDate" class="inp" value="' + esc(ed ? ed.docDate : UI.todayISO()) + '" required></div>' +
+        '</div>' +
+        '<div><label class="lbl">เรื่อง <span class="req">*</span></label>' +
+          '<input name="subject" class="inp" placeholder="เช่น ขอลาป่วย" value="' + esc(ed ? ed.subject : '') + '" required></div>' +
+        '<div class="rounded-xl bg-brand-50/70 px-4 py-2.5 text-sm font-semibold text-brand-700">เรียน สาธารณสุขอำเภอกู่แก้ว</div>' +
+        '<div class="grid gap-4 sm:grid-cols-3">' +
+          '<div><label class="lbl">ข้าพเจ้า</label><input class="inp" value="' + esc(me.fullname) + '" readonly></div>' +
+          '<div><label class="lbl">ตำแหน่ง</label><input class="inp" value="' + esc(me.position || '-') + '" readonly></div>' +
+          '<div><label class="lbl">สังกัด</label><input class="inp" value="' + esc(st.affiliation) + '" readonly></div>' +
+        '</div>' +
+        '<div><label class="lbl">ขอลา <span class="req">*</span></label>' +
+          '<div class="flex flex-wrap gap-2">' + typeRadio + '</div></div>' +
+        '<div><label class="lbl">เนื่องจาก <span class="req">*</span></label>' +
+          '<textarea name="reason" class="txa" required>' + esc(ed ? ed.reason : '') + '</textarea></div>' +
+        '<div class="grid gap-4 sm:grid-cols-3">' +
+          '<div><label class="lbl">ตั้งแต่วันที่ <span class="req">*</span></label>' +
+            '<input type="date" name="startDate" id="lvS" class="inp" value="' + esc(ed ? ed.startDate : '') + '" required></div>' +
+          '<div><label class="lbl">ถึงวันที่ <span class="req">*</span></label>' +
+            '<input type="date" name="endDate" id="lvE" class="inp" value="' + esc(ed ? ed.endDate : '') + '" required></div>' +
+          '<div><label class="lbl">มีกำหนด (วัน)</label>' +
+            '<input id="lvD" class="inp" value="' + esc(ed ? ed.days : 0) + '" readonly></div>' +
+        '</div>' +
+        '<div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">' +
+          '<p class="mb-2 text-sm font-semibold text-slate-700">ข้าพเจ้าได้ลา (ครั้งสุดท้าย)</p>' +
+          '<div class="mb-3 flex flex-wrap gap-4">' + lastCb + '</div>' +
+          '<div class="grid gap-3 sm:grid-cols-3">' +
+            '<div><label class="lbl">ตั้งแต่วันที่</label><input class="inp" value="' + esc(last ? UI.thDate(last.startDate) : '-') + '" readonly></div>' +
+            '<div><label class="lbl">ถึงวันที่</label><input class="inp" value="' + esc(last ? UI.thDate(last.endDate) : '-') + '" readonly></div>' +
+            '<div><label class="lbl">มีกำหนด (วัน)</label><input class="inp" value="' + esc(last ? last.days : '-') + '" readonly></div>' +
+          '</div></div>' +
+        '<div><label class="lbl">ในระหว่างลาจะติดต่อข้าพเจ้าได้ที่ <span class="req">*</span></label>' +
+          '<input name="contact" class="inp" value="' + esc(ed ? ed.contact : '') + '" required></div>' +
+        '<div class="text-center text-sm font-semibold text-slate-600">ขอแสดงความนับถือ</div>' +
+        UI.signatureBlockHTML('sigStaff', me.signature || '', 'ลงชื่อเจ้าหน้าที่') +
+
+        '<div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">' +
+          '<p class="mb-3 text-sm font-semibold text-slate-700">' +
+            '<i class="fa-solid fa-user-check"></i> ผู้ตรวจสอบ <span class="req text-danger2">*</span></p>' +
+          '<select id="lvChecker" class="sel">' + peopleOpts(ed ? ed.checkerId : '') + '</select>' +
+          '<p class="mt-1 text-xs text-slate-400">ระบบจะดึงชื่อ ตำแหน่ง และลายเซ็นสแกนของผู้ตรวจสอบ ' +
+          'ไปแสดงใต้ตารางสถิติการลาในใบลาที่พิมพ์</p>' +
+          '<div id="lvCheckerInfo" class="mt-2 text-sm text-slate-600"></div>' +
+        '</div>' +
+        '<div class="rounded-2xl border border-brand-100 bg-brand-50/40 p-4">' +
+          '<p class="mb-2 text-sm font-semibold text-brand-700">สถิติการลาในปีงบประมาณ ' + esc(fy ? fy.name : '-') + '</p>' +
+          '<div id="lvStat"></div></div>' +
+        '<div class="flex justify-end gap-2 pt-1">' +
+          '<button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> ' +
+          (ed ? 'บันทึกการแก้ไข' : 'ยื่นบันทึกขออนุญาตลา') + '</button></div>' +
+      '</form>';
+      body.innerHTML = h;
+
+      var sig = UI.initSignatureBlock('sigStaff', me.signature || '');
+      bindPersonInfo('lvChecker', 'lvCheckerInfo');
+      if ($('#lvCancel')) $('#lvCancel').addEventListener('click', function () { _editId = null; APP.go('mine'); });
+
+      function curType() {
+        var r = document.querySelector('input[name=leaveType]:checked');
+        return r ? r.value : '';
+      }
+      function recalc() {
+        var d = UI.daysBetween($('#lvS').value, $('#lvE').value);
+        $('#lvD').value = d;
+        var before = DB.summaryOf(me.id, fy ? fy.id : '', _editId || null);
+        $('#lvStat').innerHTML = statTableHTML(before, { type: curType(), days: d });
+      }
+      $('#lvS').addEventListener('change', recalc);
+      $('#lvE').addEventListener('change', recalc);
+      $$('input[name=leaveType]').forEach(function (r) { r.addEventListener('change', recalc); });
+      recalc();
+
+      $('#lvForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(e.target);
+        var d = {
+          docDate: fd.get('docDate'),
+          subject: String(fd.get('subject') || '').trim(),
+          leaveType: curType(),
+          reason: String(fd.get('reason') || '').trim(),
+          startDate: fd.get('startDate'),
+          endDate: fd.get('endDate'),
+          contact: String(fd.get('contact') || '').trim()
+        };
+        if (!d.docDate || !d.subject || !d.leaveType || !d.reason || !d.startDate || !d.endDate || !d.contact) {
+          UI.warn('กรอกข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบทุกช่อง'); return;
+        }
+        var days = UI.daysBetween(d.startDate, d.endDate);
+        if (!days) { UI.warn('ช่วงวันที่ไม่ถูกต้อง', 'วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น'); return; }
+        var checker = DB.userById($('#lvChecker').value);
+        if (!checker) { UI.warn('ยังไม่เลือกผู้ตรวจสอบ', 'กรุณาเลือกผู้ตรวจสอบจากรายชื่อ'); return; }
+        var sg = sig.get();
+        if (!sg) { UI.warn('ยังไม่ได้ลงลายเซ็น', 'กรุณาเลือกลายเซ็นสแกน หรือเซ็นสดในกรอบ'); return; }
+
+        var per = DB.resolvePeriod(d.startDate);
+        var before = DB.summaryOf(me.id, per.fyId, _editId || null);
+
+        var rec = Object.assign({}, d, {
+          id: _editId || undefined,
+          userId: me.id,
+          fyId: per.fyId, fyName: per.fyName, round: per.round,
+          days: days,
+          writtenAt: st.officeName, affiliation: st.affiliation,
+          applicantName: me.fullname, applicantPosition: me.position || '',
+          signature: sg,
+          /* snapshot ผู้ตรวจสอบ ณ วันที่ยื่น (ชื่อ/ตำแหน่ง/ลายเซ็นไม่เปลี่ยนตามภายหลัง) */
+          checkerId: checker.id, checkerName: checker.fullname,
+          checkerPosition: checker.position || '', checkerSignature: checker.signature || '',
+          checkedAt: d.docDate,
+          lastType: last ? last.leaveType : '', lastStart: last ? last.startDate : '',
+          lastEnd: last ? last.endDate : '', lastDays: last ? last.days : '',
+          summaryBefore: before,
+          status: 'pending'
+        });
+
+        UI.confirmAsk(_editId ? 'ยืนยันการแก้ไขใบลา?' : 'ยืนยันการยื่นใบลา?',
+          '<div class="text-left text-sm leading-7">' +
+          '<b>ประเภท:</b> ' + esc(UI.typeName(d.leaveType)) + '<br>' +
+          '<b>วันที่ลา:</b> ' + esc(UI.rangeText(d.startDate, d.endDate)) + '<br>' +
+          '<b>มีกำหนด:</b> ' + days + ' วัน<br>' +
+          '<b>รอบที่/ปีงบประมาณ:</b> ' + esc(per.round) + '/' + esc(per.fyName) + '<br>' +
+          '<b>ผู้ตรวจสอบ:</b> ' + esc(checker.fullname) +
+          '</div>', '<i class="fa-solid fa-paper-plane"></i> ยืนยัน').then(function (yes) {
+          if (!yes) return;
+          UI.busy('กำลังบันทึกใบลา...');
+          UI.delay(600).then(function () {
+            DB.saveLeave(rec);
+            _editId = null;
+            UI.idle();
+            UI.ok('บันทึกสำเร็จ', 'ยื่นใบลาเรียบร้อย รอสาธารณสุขอำเภอพิจารณา').then(function () { APP.go('mine'); });
+          });
+        });
+      });
+    });
+  }
+
+  /* ================= ขอลาพักผ่อน ================= */
+  function vacation(body) {
+    body.innerHTML = UI.skForm();
+    UI.delay().then(function () {
+      var me = APP.user(), st = DB.settings(), fy = DB.currentFY();
+      var ed = _editId ? DB.leaveById(_editId) : null;
+      if (ed && (ed.leaveType !== 'vacation' || ed.status !== 'pending')) { ed = null; _editId = null; }
+
+      /* ดึงสิทธิลาพักผ่อนอัตโนมัติ (ไม่นับใบที่กำลังแก้ไข) */
+      var v = DB.vacationInfo(me.id, fy ? fy.id : '', _editId || null);
+      var district = st.district || 'กู่แก้ว';
+
+      var boss = DB.chief();   /* สาธารณสุขอำเภอ : ผู้ให้ความเห็นผู้บังคับบัญชา */
+
+      var h = UI.pageHead(ed ? 'แก้ไขแบบใบลาพักผ่อน' : 'แบบใบลาพักผ่อน',
+        'ปีงบประมาณปัจจุบัน ' + (fy ? fy.name : '-') + ' · ช่องสีเทาระบบดึงข้อมูลให้อัตโนมัติ',
+        ed ? '<button class="btn-ghost" id="vcCancel"><i class="fa-solid fa-xmark"></i> ยกเลิกการแก้ไข</button>' : '');
+
+      h += '<form id="vcForm" class="sheet max-w-4xl space-y-4">' +
+        '<div class="grid gap-4 sm:grid-cols-2">' +
+          '<div><label class="lbl">เขียนที่</label><input class="inp" value="' + esc(ed ? ed.writtenAt : st.officeName) + '" readonly></div>' +
+          '<div><label class="lbl">วันที่ <span class="req">*</span></label>' +
+            '<input type="date" name="docDate" class="inp" value="' + esc(ed ? ed.docDate : UI.todayISO()) + '" required></div>' +
+        '</div>' +
+        '<div class="grid gap-4 sm:grid-cols-2">' +
+          '<div><label class="lbl">เรื่อง</label><input class="inp" value="ขอลาพักผ่อน" readonly></div>' +
+          '<div><label class="lbl">เรียน</label><input class="inp" value="นายอำเภอ' + esc(district) + '" readonly></div>' +
+        '</div>' +
+        '<div class="grid gap-4 sm:grid-cols-3">' +
+          '<div><label class="lbl">ข้าพเจ้า</label><input class="inp" value="' + esc(me.fullname) + '" readonly></div>' +
+          '<div><label class="lbl">ตำแหน่ง</label><input class="inp" value="' + esc(me.position || '-') + '" readonly></div>' +
+          '<div><label class="lbl">สังกัด</label><input class="inp" value="' + esc(st.affiliation) + '" readonly></div>' +
+        '</div>' +
+
+        '<div class="rounded-2xl border border-brand-100 bg-brand-50/40 p-4">' +
+          '<p class="mb-3 text-sm font-semibold text-brand-700"><i class="fa-solid fa-calculator"></i> สิทธิลาพักผ่อน (ระบบคำนวณอัตโนมัติ)</p>' +
+          '<div class="grid gap-3 sm:grid-cols-3">' +
+            '<div><label class="lbl">มีวันลาพักผ่อนสะสม</label><input class="inp" value="' + esc(v.carry) + '" readonly></div>' +
+            '<div><label class="lbl">มีสิทธิลาพักผ่อนประจำปีนี้อีก (วันทำการ)</label><input class="inp" value="' + esc(v.remain) + '" readonly></div>' +
+            '<div><label class="lbl">รวมเป็น (วันทำการ)</label><input class="inp font-bold" value="' + esc(v.total) + '" readonly></div>' +
+          '</div>' +
+          '<p class="mt-2 text-xs text-slate-500">สิทธิประจำปี ' + esc(v.quota) + ' วัน · ใช้ไปแล้วในปีงบประมาณนี้ ' + esc(v.used) + ' วัน' +
+            ' <span class="text-slate-400">(แก้ไขวันสะสม/สิทธิประจำปีได้ที่เมนูจัดการผู้ใช้งานของผู้ดูแลระบบ)</span></p>' +
+        '</div>' +
+
+        '<div class="grid gap-4 sm:grid-cols-3">' +
+          '<div><label class="lbl">ขอลาพักผ่อน ตั้งแต่วันที่ <span class="req">*</span></label>' +
+            '<input type="date" name="startDate" id="vcS" class="inp" value="' + esc(ed ? ed.startDate : '') + '" required></div>' +
+          '<div><label class="lbl">ถึงวันที่ <span class="req">*</span></label>' +
+            '<input type="date" name="endDate" id="vcE" class="inp" value="' + esc(ed ? ed.endDate : '') + '" required></div>' +
+          '<div><label class="lbl">กำหนด (วัน)</label><input id="vcD" class="inp" value="' + esc(ed ? ed.days : 0) + '" readonly></div>' +
+        '</div>' +
+        '<div><label class="lbl">ในระหว่างลาจะติดต่อข้าพเจ้าได้ที่ โทรศัพท์ <span class="req">*</span></label>' +
+          '<input name="contact" class="inp" placeholder="เช่น 08x-xxx-xxxx" value="' + esc(ed ? ed.contact : '') + '" required></div>' +
+
+        UI.signatureBlockHTML('sigVac', me.signature || '', 'ลงชื่อผู้ขอลา') +
+
+        '<div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">' +
+          '<p class="mb-3 text-sm font-semibold text-slate-700"><i class="fa-solid fa-user-check"></i> ผู้ตรวจสอบ <span class="req text-danger2">*</span></p>' +
+          '<select id="vcChecker" class="sel">' + peopleOpts(ed ? ed.checkerId : '') + '</select>' +
+          '<p class="mt-1 text-xs text-slate-400">ระบบจะดึงชื่อ ตำแหน่ง และลายเซ็นสแกนของผู้ตรวจสอบมาแสดงในใบลาอัตโนมัติ</p>' +
+          '<div id="vcCheckerInfo" class="mt-2 text-sm text-slate-600"></div>' +
+        '</div>' +
+
+        '<div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">' +
+          '<p class="mb-1 text-sm font-semibold text-slate-700"><i class="fa-solid fa-user-gear"></i> หมายเหตุ : ขอมอบหมายงานในหน้าที่ของข้าพเจ้า</p>' +
+          '<p class="mb-3 text-xs text-slate-400">เลือกผู้ปฏิบัติงานแทน <span class="text-danger2">*</span></p>' +
+          '<select id="vcDeputy" class="sel">' + peopleOpts(ed ? ed.deputyId : '') + '</select>' +
+          '<div id="vcDeputyInfo" class="mt-2 text-sm text-slate-600"></div>' +
+        '</div>' +
+
+        '<div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">' +
+          '<p class="mb-2 text-sm font-semibold text-slate-700"><i class="fa-solid fa-user-tie"></i> ผู้ลงนามในใบลา (ระบบดึงให้อัตโนมัติ)</p>' +
+          '<div class="grid gap-3 sm:grid-cols-2 text-sm">' +
+            '<div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">' +
+              '<p class="text-xs text-slate-400">ความเห็นผู้บังคับบัญชา</p>' +
+              '<p class="font-semibold text-slate-700">' + esc(boss ? boss.fullname : '— ยังไม่มีบัญชีสาธารณสุขอำเภอ —') + '</p>' +
+              '<p class="text-xs text-slate-500">' + esc(boss ? (boss.position || 'สาธารณสุขอำเภอ' + district) : '-') + '</p>' +
+            '</div>' +
+            '<div class="rounded-xl bg-white p-3 ring-1 ring-slate-200">' +
+              '<p class="text-xs text-slate-400">คำสั่ง</p>' +
+              '<p class="font-semibold text-slate-700">นายอำเภอ' + esc(district) + '</p>' +
+              '<p class="text-xs text-slate-500">เว้นช่องไว้ให้ลงนามด้วยปากกา</p>' +
+            '</div>' +
+          '</div></div>' +
+        '<div class="rounded-2xl border border-brand-100 bg-brand-50/40 p-4">' +
+          '<p class="mb-2 text-sm font-semibold text-brand-700">สถิติการลาพักผ่อนในปีงบประมาณ ' + esc(fy ? fy.name : '-') + '</p>' +
+          '<div id="vcStat"></div></div>' +
+
+        '<div class="flex justify-end gap-2 pt-1">' +
+          '<button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> ' +
+          (ed ? 'บันทึกการแก้ไข' : 'ยื่นบันทึกขอลาพักผ่อน') + '</button></div>' +
+      '</form>';
+      body.innerHTML = h;
+
+      var sig = UI.initSignatureBlock('sigVac', me.signature || '');
+      if ($('#vcCancel')) $('#vcCancel').addEventListener('click', function () { _editId = null; APP.go('mine'); });
+
+      bindPersonInfo('vcChecker', 'vcCheckerInfo');
+      bindPersonInfo('vcDeputy', 'vcDeputyInfo');
+
+      function recalc() {
+        var d = UI.daysBetween($('#vcS').value, $('#vcE').value);
+        $('#vcD').value = d;
+        $('#vcStat').innerHTML =
+          '<div class="tbl-wrap"><table class="tbl" style="min-width:420px"><thead><tr>' +
+          '<th>ลามาแล้ว (วันทำการ)</th><th>ลาครั้งนี้ (เว้นวันทำการ)</th><th>รวมเป็น (วันทำการ)</th>' +
+          '</tr></thead><tbody><tr>' +
+          '<td class="td-c">' + v.used + '</td><td class="td-c">' + d + '</td>' +
+          '<td class="td-c font-semibold">' + (v.used + d) + '</td>' +
+          '</tr></tbody></table></div>';
+      }
+      $('#vcS').addEventListener('change', recalc);
+      $('#vcE').addEventListener('change', recalc);
+      recalc();
+
+      $('#vcForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(e.target);
+        var docDate = fd.get('docDate'), s = fd.get('startDate'), en = fd.get('endDate');
+        var contact = String(fd.get('contact') || '').trim();
+        var checker = DB.userById($('#vcChecker').value);
+        var deputy = DB.userById($('#vcDeputy').value);
+
+        if (!docDate || !s || !en || !contact) {
+          UI.warn('กรอกข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบทุกช่อง'); return;
+        }
+        if (!checker) { UI.warn('ยังไม่เลือกผู้ตรวจสอบ'); return; }
+        if (!deputy) { UI.warn('ยังไม่เลือกผู้ปฏิบัติงานแทน'); return; }
+        var days = UI.daysBetween(s, en);
+        if (!days) { UI.warn('ช่วงวันที่ไม่ถูกต้อง', 'วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น'); return; }
+        if (days > v.total) {
+          UI.warn('วันลาเกินสิทธิ', 'ขอลา ' + days + ' วัน แต่มีสิทธิลาพักผ่อนคงเหลือ ' + v.total + ' วันทำการ'); return;
+        }
+        var sg = sig.get();
+        if (!sg) { UI.warn('ยังไม่ได้ลงลายเซ็น', 'กรุณาเลือกลายเซ็นสแกน หรือเซ็นสดในกรอบ'); return; }
+
+        var per = DB.resolvePeriod(s);
+        var rec = {
+          id: _editId || undefined,
+          userId: me.id,
+          fyId: per.fyId, fyName: per.fyName, round: per.round,
+          leaveType: 'vacation',
+          subject: 'ขอลาพักผ่อน',
+          reason: 'ลาพักผ่อนประจำปี',
+          docDate: docDate, startDate: s, endDate: en, days: days, contact: contact,
+          writtenAt: st.officeName, affiliation: st.affiliation, district: district,
+          applicantName: me.fullname, applicantPosition: me.position || '',
+          signature: sg,
+          /* snapshot ผู้ตรวจสอบ / ผู้ปฏิบัติงานแทน */
+          checkerId: checker.id, checkerName: checker.fullname,
+          checkerPosition: checker.position || '', checkerSignature: checker.signature || '',
+          checkedAt: docDate,
+          deputyId: deputy.id, deputyName: deputy.fullname,
+          deputyPosition: deputy.position || '', deputySignature: deputy.signature || '',
+          /* snapshot สิทธิ ณ วันที่ยื่น */
+          vacation: { carry: v.carry, quota: v.quota, used: v.used, remain: v.remain, total: v.total },
+          summaryBefore: DB.summaryOf(me.id, per.fyId, _editId || null),
+          status: 'pending'
+        };
+
+        UI.confirmAsk(_editId ? 'ยืนยันการแก้ไขใบลาพักผ่อน?' : 'ยืนยันการยื่นใบลาพักผ่อน?',
+          '<div class="text-left text-sm leading-7">' +
+          '<b>วันที่ลา:</b> ' + esc(UI.rangeText(s, en)) + '<br>' +
+          '<b>กำหนด:</b> ' + days + ' วัน<br>' +
+          '<b>คงเหลือหลังลา:</b> ' + (v.total - days) + ' วันทำการ<br>' +
+          '<b>ผู้ตรวจสอบ:</b> ' + esc(checker.fullname) + '<br>' +
+          '<b>ผู้ปฏิบัติงานแทน:</b> ' + esc(deputy.fullname) +
+          '</div>', '<i class="fa-solid fa-paper-plane"></i> ยืนยัน').then(function (yes) {
+          if (!yes) return;
+          UI.busy('กำลังบันทึกใบลาพักผ่อน...');
+          UI.delay(600).then(function () {
+            DB.saveLeave(rec);
+            _editId = null;
+            UI.idle();
+            UI.ok('บันทึกสำเร็จ', 'ยื่นใบลาพักผ่อนเรียบร้อย รอผู้บังคับบัญชาพิจารณา').then(function () { APP.go('mine'); });
+          });
+        });
+      });
+    });
+  }
+
+  /* ================= ข้อมูลขออนุญาตลาของฉัน ================= */
+  function mine(body) {
+    body.innerHTML = UI.skTable(6, 7);
+    UI.delay().then(function () {
+      var me = APP.user();
+      var list = DB.leavesByUser(me.id).sort(function (a, b) {
+        return String(a.startDate).localeCompare(String(b.startDate));
+      });
+      var h = UI.pageHead('ข้อมูลขออนุญาตลา', 'ทั้งหมด ' + list.length + ' รายการ',
+        '<button class="btn-primary" id="goReq"><i class="fa-solid fa-file-pen"></i> ขออนุญาตลา</button>');
+      h += '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+        '<th style="width:60px">ลำดับ</th><th>ปีงบประมาณ</th><th>รอบที่</th><th>ประเภทการลา</th>' +
+        '<th>กำหนดวัน</th><th>สถานะ</th><th style="width:170px">จัดการ</th></tr></thead><tbody>';
+      if (!list.length) h += UI.emptyRow(7, 'ยังไม่มีการยื่นใบลา');
+      list.forEach(function (l, i) {
+        var pending = (l.status || 'pending') === 'pending';
+        h += '<tr><td class="td-c">' + (i + 1) + '</td>' +
+          '<td class="td-c">' + esc(l.fyName) + '</td><td class="td-c">' + esc(l.round) + '</td>' +
+          '<td class="td-c">' + UI.typeBadge(l.leaveType) + '</td>' +
+          '<td class="td-c">' + esc(UI.rangeText(l.startDate, l.endDate)) + ' <span class="text-slate-400">(' + esc(l.days) + ' วัน)</span></td>' +
+          '<td class="td-c">' + UI.statusBadge(l.status) + '</td>' +
+          '<td class="td-c"><div class="flex justify-center gap-1.5">' +
+            '<button class="ibtn ibtn-view" data-view="' + l.id + '" title="ดูใบลา"><i class="fa-solid fa-eye"></i></button>' +
+            '<button class="ibtn ibtn-print" data-print="' + l.id + '" title="พิมพ์ใบลา"><i class="fa-solid fa-print"></i></button>' +
+            (pending ? '<button class="ibtn ibtn-edit" data-edit="' + l.id + '" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>' +
+                       '<button class="ibtn ibtn-del" data-del="' + l.id + '" title="ลบ"><i class="fa-solid fa-trash"></i></button>' : '') +
+          '</div></td></tr>';
+      });
+      h += '</tbody></table></div>';
+      body.innerHTML = h;
+
+      $('#goReq').addEventListener('click', function () { _editId = null; APP.go('request'); });
+      $$('[data-view]', body).forEach(function (b) {
+        b.addEventListener('click', function () { PRINT.preview(b.dataset.view); });
+      });
+      $$('[data-print]', body).forEach(function (b) {
+        b.addEventListener('click', function () { PRINT.leave(b.dataset.print); });
+      });
+      $$('[data-edit]', body).forEach(function (b) {
+        b.addEventListener('click', function () {
+          var l = DB.leaveById(b.dataset.edit);
+          _editId = b.dataset.edit;
+          APP.go(l && l.leaveType === 'vacation' ? 'vacation' : 'request');
+        });
+      });
+      $$('[data-del]', body).forEach(function (b) {
+        b.addEventListener('click', function () {
+          UI.confirmDel('ลบใบลานี้?').then(function (yes) {
+            if (!yes) return;
+            UI.busy('กำลังลบข้อมูล...');
+            UI.delay(400).then(function () {
+              DB.deleteLeave(b.dataset.del);
+              UI.idle(); UI.toast('ลบใบลาเรียบร้อย'); APP.reload();
+            });
+          });
+        });
+      });
+    });
+  }
+
+  /** ล้างสถานะ "กำลังแก้ไขใบลา" (เรียกเมื่อผู้ใช้กดเมนูเอง) */
+  function clearEditing() { _editId = null; }
+
+  return { MENU: MENU, render: render, profile: profile, statTableHTML: statTableHTML, clearEditing: clearEditing };
+})();
+
+</script>
+<script>
+/* ---------- assets/js/app.js ---------- */
+/* ============================================================
+   app.js — โครงหลัก : sidebar, routing, bootstrap
+   ============================================================ */
+var APP = (function () {
+  var $ = UI.$;
+  var _user = null;
+  var _page = null;
+
+  function user() { return _user; }
+
+  function moduleOf(role) {
+    if (role === 'admin') return ADMIN;
+    if (role === 'chief') return CHIEF;
+    return STAFF;
+  }
+
+  /* ---------- sidebar ---------- */
+  function openSb() {
+    $('#sidebar').classList.remove('-translate-x-full');
+    $('#sbBackdrop').classList.remove('hidden');
+  }
+  function closeSb() {
+    if (window.innerWidth >= 1024) return;   /* จอใหญ่เมนูค้างไว้เสมอ */
+    $('#sidebar').classList.add('-translate-x-full');
+    $('#sbBackdrop').classList.add('hidden');
+  }
+
+  /* ---------- แบรนด์/ผู้ใช้ ---------- */
+  function renderShell() {
+    var s = DB.settings();
+    $('#sbLogo').src = s.logo || DB.DEFAULT_LOGO;
+    $('#sbOffice').textContent = s.officeName || '';
+    $('#sbAvatar').src = UI.avatarOf(_user);
+    $('#hdAvatar').src = UI.avatarOf(_user);
+    $('#sbName').textContent = _user.fullname || '';
+    $('#sbRole').textContent = UI.roleName(_user.role) + (_user.position ? ' · ' + _user.position : '');
+    $('#appFooter').innerHTML =
+      '<span class="font-semibold text-brand-700">ระบบการลา บุคลากรเจ้าหน้าที่</span> ' +
+      UI.esc(s.officeName || '') + ' ' + UI.esc(s.province || '') +
+      '<span class="mt-0.5 block text-[11px] text-slate-400">สังกัด ' + UI.esc(s.affiliation || '') + '</span>';
+
+    var fy = DB.currentFY();
+    $('#hdFiscal').innerHTML = '<i class="fa-solid fa-calendar-days"></i> ปีงบประมาณ ' + UI.esc(fy ? fy.name : '-');
+
+    renderMenu();
+  }
+
+  function renderMenu() {
+    var items = moduleOf(_user.role).MENU;
+    $('#sbMenu').innerHTML =
+      '<p class="px-3 pb-1.5 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">เมนู' +
+      UI.esc(UI.roleName(_user.role)) + '</p>' +
+      items.map(function (m) {
+        return '<button class="mi' + (m.id === _page ? ' active' : '') + '" data-page="' + m.id + '">' +
+               '<i class="fa-solid ' + m.icon + '"></i> ' + UI.esc(m.label) + '</button>';
+      }).join('');
+    UI.$$('#sbMenu .mi').forEach(function (b) {
+      b.addEventListener('click', function () {
+        /* กดเมนูเอง = เริ่มใบลาใหม่ ไม่ใช่โหมดแก้ไข */
+        if (window.STAFF && STAFF.clearEditing) STAFF.clearEditing();
+        go(b.dataset.page); closeSb();
+      });
+    });
+  }
+
+  /* ---------- routing ---------- */
+  function go(pageId) {
+    var mod = moduleOf(_user.role);
+    var item = mod.MENU.filter(function (m) { return m.id === pageId; })[0] || mod.MENU[0];
+    _page = item.id;
+    renderMenu();
+    $('#pageTitle').textContent = item.title || item.label;
+    $('#pageSub').textContent = item.sub || '';
+    window.scrollTo({ top: 0 });
+    mod.render(_page, $('#pageBody'));
+  }
+
+  /* ---------- หน้าจอ ---------- */
+  function showLogin() {
+    _user = null; _page = null;
+    $('#appView').classList.add('hidden');
+    $('#loginView').classList.remove('hidden');
+    $('#loginView').classList.add('flex');
+    $('#loginForm').reset();
+    AUTH.fillLoginBrand();
+  }
+
+  function enterApp(u) {
+    _user = DB.userById(u.id) || u;
+    $('#loginView').classList.add('hidden');
+    $('#loginView').classList.remove('flex');
+    $('#appView').classList.remove('hidden');
+    renderShell();
+    go(moduleOf(_user.role).MENU[0].id);
+  }
+
+  /** เรียกเมื่อข้อมูลผู้ใช้/ตั้งค่าเปลี่ยน */
+  function refreshUser() {
+    if (!_user) return;
+    _user = DB.userById(_user.id) || _user;
+    renderShell();
+  }
+
+  function reload() { if (_page) go(_page); }
+
+  /* ---------- ตัวบอกสถานะการบันทึกขึ้นเซิร์ฟเวอร์ ---------- */
+  function bindSyncBadge() {
+    var el = $('#syncBadge');
+    if (!el) return;
+    if (!DB.hasServer()) { el.classList.add('hidden'); return; }
+    DB.onSync(function (s) {
+      el.classList.remove('hidden');
+      if (s.state === 'saving') {
+        el.className = 'badge badge-wait';
+        el.innerHTML = '<span class="spinner spinner-sm"></span> กำลังบันทึก...';
+      } else if (s.state === 'error') {
+        el.className = 'badge badge-no';
+        el.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ยังไม่ได้บันทึก';
+        el.title = s.message || '';
+      } else {
+        el.className = 'badge badge-ok';
+        el.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> บันทึกแล้ว';
+        el.title = s.at ? 'ล่าสุด ' + s.at.toLocaleTimeString('th-TH') : '';
+      }
+    });
+  }
+
+  /* ---------- boot ---------- */
+  function boot() {
+    /* โหลดข้อมูลจาก Google Sheets (หรือ localStorage) ให้เสร็จก่อนเปิดระบบ */
+    var splash = $('#bootScreen');
+    DB.bootstrap(function (err, info) {
+      if (splash) splash.remove();
+      if (err) {
+        UI.warn('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้',
+          'ระบบกำลังใช้ข้อมูลสำเนาในเครื่องชั่วคราว การแก้ไขอาจยังไม่ถูกบันทึกขึ้น Google Sheets');
+      }
+      start();
+    });
+  }
+
+  function start() {
+    bindSyncBadge();
+    AUTH.bind();
+
+    $('#sbOpen').addEventListener('click', openSb);
+    $('#sbClose').addEventListener('click', closeSb);
+    $('#sbBackdrop').addEventListener('click', closeSb);
+
+    /* ปิด modal : ใช้ event delegation รองรับปุ่มที่สร้างภายหลัง */
+    $('#modal').addEventListener('click', function (ev) {
+      var t = ev.target.closest ? ev.target.closest('[data-modal-close]') : null;
+      if (t) UI.closeModal();
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && !$('#modal').classList.contains('hidden')) UI.closeModal();
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        $('#sidebar').classList.remove('-translate-x-full');
+        $('#sbBackdrop').classList.add('hidden');
+      }
+    });
+
+    var su = DB.sessionUser();
+    if (su) enterApp(su); else showLogin();
+  }
+
+  return {
+    boot: boot, go: go, reload: reload, user: user,
+    showLogin: showLogin, enterApp: enterApp, refreshUser: refreshUser,
+    renderShell: renderShell, closeSb: closeSb
+  };
+})();
+
+document.addEventListener('DOMContentLoaded', APP.boot);
+
+</script>
 </body>
 </html>
