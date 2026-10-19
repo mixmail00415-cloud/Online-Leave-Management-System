@@ -612,8 +612,15 @@ var DB = (function () {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: action, token: API_TOKEN, data: data })
     })
-      .then(function (r) { return r.json(); })
-      .then(function (res) {
+      .then(function (r) { return r.text(); })
+      .then(function (txt) {
+        var res;
+        try { res = JSON.parse(txt); }
+        catch (e) {
+          /* Apps Script ตอบกลับเป็นหน้า HTML = สคริปต์ยังไม่ได้รับอนุญาต (เช่นสิทธิ์ Drive) หรือ deploy ไม่ได้เปิดให้ทุกคน */
+          return cb(new Error('เซิร์ฟเวอร์ตอบกลับผิดรูปแบบ : กรุณาเปิด Apps Script แล้วกด Run ฟังก์ชัน authorizeDrive ' +
+            'เพื่ออนุญาตสิทธิ์ Google Drive จากนั้น Deploy เป็น New version (Execute as: Me, Who has access: Anyone)'));
+        }
         if (res && res.ok) cb(null, res);
         else cb(new Error((res && res.error) || 'บันทึกไม่สำเร็จ'));
       })
