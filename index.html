@@ -727,7 +727,11 @@ var DB = (function () {
       var j = jobs[i], v = j.o[j.f];
       if (done[v]) { j.o[j.f] = done[v]; return next(i + 1); }
       uploadImage(v, j.name, function (err, url) {
-        if (err || !url) return cb(err || new Error('อัปโหลดรูปภาพไป Google Drive ไม่สำเร็จ'));
+        if (err || !url) {
+          /* เซิร์ฟเวอร์ยังไม่รองรับการอัปโหลด (Code.gs เวอร์ชันเก่า) : บันทึกแบบเดิมไปก่อน ไม่ให้ค้าง */
+          console.warn('อัปโหลดรูปไป Drive ไม่สำเร็จ บันทึกแบบเดิมแทน', err);
+          return cb(null);
+        }
         done[v] = url;
         if (j.o[j.f] === v) j.o[j.f] = url;
         next(i + 1);
