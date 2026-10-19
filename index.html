@@ -682,11 +682,57 @@ var DB = (function () {
       }).then(function (r) { if (r.isConfirmed) push(); });
     }
 
+    /* อัปโหลดรูปใหม่ขึ้น Drive ก่อน แล้วจึงบันทึกข้อมูล (ชีตเก็บแค่ลิงก์) */
+    externalize(function (err) {
+      if (err) return fail(err);
+      if (inGas()) {
+        google.script.run.withSuccessHandler(ok).withFailureHandler(fail).apiSave(_d);
+      } else {
+        postApi('save', _d, function (err2) { if (err2) fail(err2); else ok(); });
+      }
+    });
+  }
+
+  /* ---------- รูปภาพ : เก็บใน Google Drive ชีตเก็บเฉพาะลิงก์ ---------- */
+  var IMG_FIELDS = ['avatar', 'signature', 'checkerSignature', 'deputySignature', 'chiefSignature'];
+  function isB64Img(v) {
+    return typeof v === 'string' && v.indexOf('data:image/') === 0 && v.indexOf(';base64,') > 0;
+  }
+  function uploadImage(dataUrl, name, cb) {
     if (inGas()) {
-      google.script.run.withSuccessHandler(ok).withFailureHandler(fail).apiSave(_d);
+      google.script.run
+        .withSuccessHandler(function (url) { cb(null, url); })
+        .withFailureHandler(function (e) { cb(e); })
+        .apiUploadImage(dataUrl, name);
     } else {
-      postApi('save', _d, function (err) { if (err) fail(err); else ok(); });
+      postApi('upload', { dataUrl: dataUrl, name: name }, function (err, res) { cb(err, res && res.result); });
     }
+  }
+  /** หารูป base64 ทุกจุดในข้อมูล อัปโหลดขึ้น Drive แล้วแทนที่ด้วยลิงก์ */
+  function externalize(cb) {
+    var jobs = [];
+    function scan(o, fields, prefix) {
+      fields.forEach(function (f) {
+        if (isB64Img(o[f])) jobs.push({ o: o, f: f, name: prefix + '_' + f });
+      });
+    }
+    scan(_d.settings, ['logo'], 'logo');
+    _d.users.forEach(function (u) { scan(u, IMG_FIELDS, u.id || 'user'); });
+    _d.leaves.forEach(function (l) { scan(l, IMG_FIELDS, l.id || 'leave'); });
+    if (!jobs.length) return cb(null);
+
+    var done = {};   /* รูปเดียวกันอัปโหลดครั้งเดียว */
+    (function next(i) {
+      if (i >= jobs.length) { cacheSave(); return cb(null); }
+      var j = jobs[i], v = j.o[j.f];
+      if (done[v]) { j.o[j.f] = done[v]; return next(i + 1); }
+      uploadImage(v, j.name, function (err, url) {
+        if (err || !url) return cb(err || new Error('อัปโหลดรูปภาพไป Google Drive ไม่สำเร็จ'));
+        done[v] = url;
+        if (j.o[j.f] === v) j.o[j.f] = url;
+        next(i + 1);
+      });
+    })(0);
   }
 
   /**
@@ -1026,6 +1072,49 @@ var UI = (function () {
     if (isNaN(d1) || isNaN(d2) || d2 < d1) return 0;
     return Math.round((d2 - d1) / 86400000) + 1;
   }
+
+  /* ---- วันหยุดนักขัตฤกษ์ / วันหยุดราชการประจำปี ----
+     วันหยุดตายตัว (MM-DD) ใช้ได้ทุกปี ; วันหยุดตามจันทรคติ/วันหยุดพิเศษ ใส่เป็น YYYY-MM-DD
+     ถ้าวันหยุดตรงเสาร์-อาทิตย์ ระบบจะเพิ่มวันหยุดชดเชยเป็นวันทำการถัดไปให้อัตโนมัติ */
+  var FIXED_HOLIDAYS = ['01-01', '04-06', '04-13', '04-14', '04-15', '05-01', '05-04', '06-03',
+                        '07-28', '08-12', '10-13', '10-23', '12-05', '12-10', '12-31'];
+  var EXTRA_HOLIDAYS = [
+    /* 2568 */ '2025-02-12', '2025-05-11', '2025-07-10', '2025-07-11',
+    /* 2569 */ '2026-03-03', '2026-05-31', '2026-07-29', '2026-07-30',
+    /* 2570 */ '2027-02-21', '2027-05-20', '2027-07-18', '2027-07-19'
+  ];
+  var _holCache = {};
+  function isoOf_(d) {
+    var m = d.getMonth() + 1, dd = d.getDate();
+    return d.getFullYear() + '-' + (m < 10 ? '0' + m : m) + '-' + (dd < 10 ? '0' + dd : dd);
+  }
+  function holidaysOfYear(y) {
+    if (_holCache[y]) return _holCache[y];
+    var list = FIXED_HOLIDAYS.map(function (md) { return y + '-' + md; })
+      .concat(EXTRA_HOLIDAYS.filter(function (s) { return s.indexOf(y + '-') === 0; }))
+      .sort();
+    var set = {};
+    list.forEach(function (s) { set[s] = true; });
+    list.forEach(function (s) {
+      var d = new Date(s + 'T00:00:00'), w = d.getDay();
+      if (w !== 0 && w !== 6) return;
+      do { d.setDate(d.getDate() + 1); } while (d.getDay() === 0 || d.getDay() === 6 || set[isoOf_(d)]);
+      set[isoOf_(d)] = true; /* วันหยุดชดเชย */
+    });
+    return (_holCache[y] = set);
+  }
+  function isHoliday(iso) { return !!holidaysOfYear(Number(iso.slice(0, 4)))[iso]; }
+  /** นับเฉพาะวันทำการ (ไม่นับเสาร์ อาทิตย์ และวันหยุดราชการ) */
+  function workDaysBetween(a, b) {
+    if (!daysBetween(a, b)) return 0;
+    var d = new Date(a + 'T00:00:00'), end = new Date(b + 'T00:00:00'), n = 0;
+    while (d <= end) {
+      var w = d.getDay();
+      if (w !== 0 && w !== 6 && !isHoliday(isoOf_(d))) n++;
+      d.setDate(d.getDate() + 1);
+    }
+    return n;
+  }
   function rangeText(a, b) {
     if (!a) return '-';
     if (!b || a === b) return thDateShort(a);
@@ -1322,7 +1411,7 @@ var UI = (function () {
 
   return {
     $: $, $$: $$, esc: esc,
-    thDate: thDate, thDateShort: thDateShort, todayISO: todayISO, daysBetween: daysBetween, rangeText: rangeText,
+    thDate: thDate, thDateShort: thDateShort, todayISO: todayISO, daysBetween: daysBetween, workDaysBetween: workDaysBetween, isHoliday: isHoliday, rangeText: rangeText,
     roleName: roleName, typeName: typeName, typeBadge: typeBadge, statusBadge: statusBadge, statusText: statusText,
     avatarOf: avatarOf,
     busy: busy, idle: idle, delay: delay, btnLoading: btnLoading,
@@ -3092,7 +3181,7 @@ var STAFF = (function () {
       bindPersonInfo('vcDeputy', 'vcDeputyInfo');
 
       function recalc() {
-        var d = UI.daysBetween($('#vcS').value, $('#vcE').value);
+        var d = UI.workDaysBetween($('#vcS').value, $('#vcE').value);
         $('#vcD').value = d;
         $('#vcStat').innerHTML =
           '<div class="tbl-wrap"><table class="tbl" style="min-width:420px"><thead><tr>' +
@@ -3119,8 +3208,9 @@ var STAFF = (function () {
         }
         if (!checker) { UI.warn('ยังไม่เลือกผู้ตรวจสอบ'); return; }
         if (!deputy) { UI.warn('ยังไม่เลือกผู้ปฏิบัติงานแทน'); return; }
-        var days = UI.daysBetween(s, en);
-        if (!days) { UI.warn('ช่วงวันที่ไม่ถูกต้อง', 'วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น'); return; }
+        if (!UI.daysBetween(s, en)) { UI.warn('ช่วงวันที่ไม่ถูกต้อง', 'วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น'); return; }
+        var days = UI.workDaysBetween(s, en);
+        if (!days) { UI.warn('ไม่มีวันทำการ', 'ช่วงวันที่เลือกตรงกับวันเสาร์-อาทิตย์ หรือวันหยุดราชการทั้งหมด'); return; }
         if (days > v.total) {
           UI.warn('วันลาเกินสิทธิ', 'ขอลา ' + days + ' วัน แต่มีสิทธิลาพักผ่อนคงเหลือ ' + v.total + ' วันทำการ'); return;
         }
